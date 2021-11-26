@@ -19,7 +19,7 @@ namespace VideoLibrary
         {
             string filename = GetFilename(id);
             if (!string.IsNullOrEmpty(filename) && File.Exists(filename))
-                return Image.FromFile(filename);
+                return new Bitmap(Image.FromFile(filename));
             else
                 return null;
         }
@@ -36,7 +36,7 @@ namespace VideoLibrary
 
         public static Image GetTagImage(string filename)
         {
-            Image loadedImage = Image.FromFile(filename);
+            Image loadedImage = new Bitmap(Image.FromFile(filename));
             return GetResizedImage(loadedImage, VideoTag.ImageSize);
         }
 
@@ -55,7 +55,7 @@ namespace VideoLibrary
                 if (!currentIds.Contains(picId))
                     try
                     {
-                        notSizedPics.Add(picId, Image.FromFile(picFile));
+                        notSizedPics.Add(picId, new Bitmap(Image.FromFile(picFile)));
                     }
                     catch
                     {
@@ -114,6 +114,51 @@ namespace VideoLibrary
             }
         }
 
+        public static Dictionary<string, Image> GetAllLanguages()
+        {
+            Dictionary<string, Image> languages = new Dictionary<string, Image>();
+            Dictionary<string, Image> notSizedLanguages = new Dictionary<string, Image>();
+
+            string languagesDirectory = GetLanguagesDirectory();
+            string[] languageFiles = Directory.GetFiles(languagesDirectory);
+            foreach (string languageFile in languageFiles)
+            {
+                string languageId = languageFile;
+                try
+                {
+                    using (var fs = new FileStream(languageFile, FileMode.Open, FileAccess.Read))
+                        notSizedLanguages.Add(languageId, Image.FromStream(fs));
+                }
+                catch
+                {
+                }
+            }
+            foreach (string id in notSizedLanguages.Keys)
+                languages.Add(id, GetResizedImage(notSizedLanguages[id], Language.ImageSize));
+
+            return languages;
+        }
+
+        public static void SaveAllLanguages(List<Language> languages)
+        {
+            string languagesDirectory = GetLanguagesDirectory();
+            if (!Directory.Exists(languagesDirectory))
+                Directory.CreateDirectory(languagesDirectory);
+
+            foreach (Language language in languages)
+            {
+                string filename = Path.Combine(GetLanguagesDirectory(), "" + language.Id + language.Extension);
+                try
+                {
+                    if (File.Exists(filename))
+                        File.Delete(filename);
+                    language.Image.Save(filename);
+                }
+                catch
+                { }
+            }
+        }
+
         private static string GetPicsDirectory()
         {
             string result = Path.Combine(GetAppDirectory(), "Pics");
@@ -126,6 +171,15 @@ namespace VideoLibrary
         private static string GetTagsDirectory()
         {
             string result = Path.Combine(GetAppDirectory(), "Tags");
+            if (!Directory.Exists(result))
+                Directory.CreateDirectory(result);
+
+            return result;
+        }
+
+        private static string GetLanguagesDirectory()
+        {
+            string result = Path.Combine(GetAppDirectory(), "Languages");
             if (!Directory.Exists(result))
                 Directory.CreateDirectory(result);
 

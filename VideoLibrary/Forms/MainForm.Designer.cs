@@ -44,7 +44,11 @@
             this.colScore = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colDuration = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colTags = new System.Windows.Forms.DataGridViewImageColumn();
+            this.colSoundLanguages = new System.Windows.Forms.DataGridViewImageColumn();
+            this.colSubLanguages = new System.Windows.Forms.DataGridViewImageColumn();
             this.colUserScore = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colResolution = new System.Windows.Forms.DataGridViewImageColumn();
+            this.colHdr = new System.Windows.Forms.DataGridViewImageColumn();
             this.colSize = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.scMain = new System.Windows.Forms.SplitContainer();
             this.lvVideo = new System.Windows.Forms.ListView();
@@ -55,34 +59,22 @@
             this.tsmiTagsFilter = new System.Windows.Forms.ToolStripMenuItem();
             this.tscbView = new System.Windows.Forms.ToolStripComboBox();
             this.tscbExistence = new System.Windows.Forms.ToolStripComboBox();
-            this.videoInfo = new VideoLibrary.VideoInfo();
-            this.tsVideoInfo = new System.Windows.Forms.ToolStrip();
-            this.tsddbTags = new System.Windows.Forms.ToolStripDropDownButton();
-            this.tsddbUserScore = new System.Windows.Forms.ToolStripDropDownButton();
-            this.tsmiUserScore0 = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsmiUserScore1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsmiUserScore2 = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsmiUserScore3 = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsmiUserScore4 = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsmiUserScore5 = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsbOpenInBrowser = new System.Windows.Forms.ToolStripButton();
-            this.tsbBrowse = new System.Windows.Forms.ToolStripButton();
-            this.tsbPlay = new System.Windows.Forms.ToolStripButton();
+            this.recordView = new VideoLibrary.ucRecordView();
             this.pClear = new System.Windows.Forms.Panel();
+            this.ucRecordEdit = new VideoLibrary.ucRecordEdit();
             this.ilVideo = new System.Windows.Forms.ImageList(this.components);
             this.msMain = new System.Windows.Forms.MenuStrip();
             this.tsmiAdd = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsmiEdit = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmiWant = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmiTest = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmiTags = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsmiLanguages = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.dgvVideo)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.scMain)).BeginInit();
             this.scMain.Panel1.SuspendLayout();
             this.scMain.Panel2.SuspendLayout();
             this.scMain.SuspendLayout();
             this.msVideo.SuspendLayout();
-            this.tsVideoInfo.SuspendLayout();
             this.msMain.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -107,16 +99,21 @@
             this.colScore,
             this.colDuration,
             this.colTags,
+            this.colSoundLanguages,
+            this.colSubLanguages,
             this.colUserScore,
+            this.colResolution,
+            this.colHdr,
             this.colSize});
             this.dgvVideo.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dgvVideo.Location = new System.Drawing.Point(0, 27);
+            this.dgvVideo.Location = new System.Drawing.Point(0, 39);
+            this.dgvVideo.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.dgvVideo.MultiSelect = false;
             this.dgvVideo.Name = "dgvVideo";
             this.dgvVideo.ReadOnly = true;
             this.dgvVideo.RowHeadersVisible = false;
             this.dgvVideo.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvVideo.Size = new System.Drawing.Size(875, 598);
+            this.dgvVideo.Size = new System.Drawing.Size(1612, 1179);
             this.dgvVideo.TabIndex = 0;
             this.dgvVideo.SelectionChanged += new System.EventHandler(this.dgvList_SelectionChanged);
             // 
@@ -145,63 +142,98 @@
             this.colYear.HeaderText = "Год";
             this.colYear.Name = "colYear";
             this.colYear.ReadOnly = true;
-            this.colYear.Width = 50;
+            this.colYear.Width = 77;
             // 
             // colScore
             // 
-            this.colScore.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
             this.colScore.DataPropertyName = "Score";
             dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
             this.colScore.DefaultCellStyle = dataGridViewCellStyle3;
             this.colScore.HeaderText = "Оценка";
             this.colScore.Name = "colScore";
             this.colScore.ReadOnly = true;
-            this.colScore.Width = 70;
+            this.colScore.Width = 40;
             // 
             // colDuration
             // 
-            this.colDuration.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
-            this.colDuration.DataPropertyName = "Duration";
+            this.colDuration.DataPropertyName = "DurationStr";
             dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
             this.colDuration.DefaultCellStyle = dataGridViewCellStyle4;
             this.colDuration.HeaderText = "Хронометраж";
             this.colDuration.Name = "colDuration";
             this.colDuration.ReadOnly = true;
-            this.colDuration.Width = 102;
+            this.colDuration.Width = 40;
             // 
             // colTags
             // 
+            this.colTags.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
             this.colTags.DataPropertyName = "TagsPic";
             this.colTags.HeaderText = "Тэги";
             this.colTags.Name = "colTags";
             this.colTags.ReadOnly = true;
+            this.colTags.Width = 53;
+            // 
+            // colSoundLanguages
+            // 
+            this.colSoundLanguages.DataPropertyName = "SoundLanguagesPic";
+            this.colSoundLanguages.HeaderText = "Озвучка";
+            this.colSoundLanguages.Name = "colSoundLanguages";
+            this.colSoundLanguages.ReadOnly = true;
+            this.colSoundLanguages.Width = 50;
+            // 
+            // colSubLanguages
+            // 
+            this.colSubLanguages.DataPropertyName = "SubLanguagesPic";
+            this.colSubLanguages.HeaderText = "Субы";
+            this.colSubLanguages.Name = "colSubLanguages";
+            this.colSubLanguages.ReadOnly = true;
+            this.colSubLanguages.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.colSubLanguages.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.colSubLanguages.Width = 50;
             // 
             // colUserScore
             // 
-            this.colUserScore.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
             this.colUserScore.DataPropertyName = "UserScore";
             dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
             this.colUserScore.DefaultCellStyle = dataGridViewCellStyle5;
             this.colUserScore.HeaderText = "Приоритет";
             this.colUserScore.Name = "colUserScore";
             this.colUserScore.ReadOnly = true;
-            this.colUserScore.Width = 86;
+            this.colUserScore.Width = 40;
+            // 
+            // colResolution
+            // 
+            this.colResolution.DataPropertyName = "ResolutionImage";
+            this.colResolution.HeaderText = "Разрешение";
+            this.colResolution.Name = "colResolution";
+            this.colResolution.ReadOnly = true;
+            this.colResolution.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.colResolution.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.colResolution.Width = 50;
+            // 
+            // colHdr
+            // 
+            this.colHdr.DataPropertyName = "IsHdrImage";
+            this.colHdr.HeaderText = "HDR";
+            this.colHdr.Name = "colHdr";
+            this.colHdr.ReadOnly = true;
+            this.colHdr.Width = 40;
             // 
             // colSize
             // 
-            this.colSize.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
             this.colSize.DataPropertyName = "Size";
             dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
             this.colSize.DefaultCellStyle = dataGridViewCellStyle6;
             this.colSize.HeaderText = "Размер";
             this.colSize.Name = "colSize";
             this.colSize.ReadOnly = true;
-            this.colSize.Width = 71;
+            this.colSize.Width = 60;
             // 
             // scMain
             // 
             this.scMain.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.scMain.Location = new System.Drawing.Point(0, 24);
+            this.scMain.Location = new System.Drawing.Point(0, 35);
+            this.scMain.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.scMain.Name = "scMain";
             // 
             // scMain.Panel1
@@ -213,13 +245,13 @@
             // 
             // scMain.Panel2
             // 
-            this.scMain.Panel2.Controls.Add(this.videoInfo);
-            this.scMain.Panel2.Controls.Add(this.tsVideoInfo);
+            this.scMain.Panel2.Controls.Add(this.recordView);
             this.scMain.Panel2.Controls.Add(this.pClear);
+            this.scMain.Panel2.Controls.Add(this.ucRecordEdit);
             this.scMain.Panel2MinSize = 250;
-            this.scMain.Size = new System.Drawing.Size(1138, 647);
-            this.scMain.SplitterDistance = 875;
-            this.scMain.SplitterWidth = 6;
+            this.scMain.Size = new System.Drawing.Size(2129, 1240);
+            this.scMain.SplitterDistance = 1612;
+            this.scMain.SplitterWidth = 9;
             this.scMain.TabIndex = 1;
             // 
             // lvVideo
@@ -228,25 +260,29 @@
             this.lvVideo.HideSelection = false;
             this.lvVideo.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
             listViewItem1});
-            this.lvVideo.Location = new System.Drawing.Point(0, 27);
+            this.lvVideo.Location = new System.Drawing.Point(0, 39);
+            this.lvVideo.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.lvVideo.MultiSelect = false;
             this.lvVideo.Name = "lvVideo";
-            this.lvVideo.Size = new System.Drawing.Size(875, 598);
+            this.lvVideo.Size = new System.Drawing.Size(1612, 1179);
             this.lvVideo.TabIndex = 3;
             this.lvVideo.UseCompatibleStateImageBehavior = false;
             this.lvVideo.SelectedIndexChanged += new System.EventHandler(this.lvVideo_SelectedIndexChanged);
             // 
             // ssVideo
             // 
-            this.ssVideo.Location = new System.Drawing.Point(0, 625);
+            this.ssVideo.ImageScalingSize = new System.Drawing.Size(24, 24);
+            this.ssVideo.Location = new System.Drawing.Point(0, 1218);
             this.ssVideo.Name = "ssVideo";
-            this.ssVideo.Size = new System.Drawing.Size(875, 22);
+            this.ssVideo.Padding = new System.Windows.Forms.Padding(2, 0, 21, 0);
+            this.ssVideo.Size = new System.Drawing.Size(1612, 22);
             this.ssVideo.SizingGrip = false;
             this.ssVideo.TabIndex = 2;
             this.ssVideo.Text = "ssHave";
             // 
             // msVideo
             // 
+            this.msVideo.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.msVideo.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tscbSort,
             this.tscbTypeFilter,
@@ -255,7 +291,8 @@
             this.tscbExistence});
             this.msVideo.Location = new System.Drawing.Point(0, 0);
             this.msVideo.Name = "msVideo";
-            this.msVideo.Size = new System.Drawing.Size(875, 27);
+            this.msVideo.Padding = new System.Windows.Forms.Padding(9, 3, 0, 3);
+            this.msVideo.Size = new System.Drawing.Size(1612, 39);
             this.msVideo.TabIndex = 1;
             // 
             // tscbSort
@@ -268,9 +305,10 @@
             "По приоритету",
             "По хронометражу",
             "По году выхода",
-            "По размеру"});
+            "По размеру",
+            "По качеству"});
             this.tscbSort.Name = "tscbSort";
-            this.tscbSort.Size = new System.Drawing.Size(130, 23);
+            this.tscbSort.Size = new System.Drawing.Size(193, 33);
             // 
             // tscbTypeFilter
             // 
@@ -280,9 +318,10 @@
             "Все",
             "Фильмы",
             "Мульты",
-            "Сериалы"});
+            "Сериалы",
+            "МиниСериалы"});
             this.tscbTypeFilter.Name = "tscbTypeFilter";
-            this.tscbTypeFilter.Size = new System.Drawing.Size(121, 23);
+            this.tscbTypeFilter.Size = new System.Drawing.Size(180, 33);
             // 
             // tsmiTagsFilter
             // 
@@ -291,7 +330,7 @@
             this.tsmiTagsFilter.Image = global::VideoLibrary.Properties.Resources.IconFilter;
             this.tsmiTagsFilter.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.tsmiTagsFilter.Name = "tsmiTagsFilter";
-            this.tsmiTagsFilter.Size = new System.Drawing.Size(28, 23);
+            this.tsmiTagsFilter.Size = new System.Drawing.Size(28, 33);
             this.tsmiTagsFilter.Text = "Фильтр";
             // 
             // tscbView
@@ -302,7 +341,7 @@
             "Картинки"});
             this.tscbView.MaxDropDownItems = 2;
             this.tscbView.Name = "tscbView";
-            this.tscbView.Size = new System.Drawing.Size(121, 23);
+            this.tscbView.Size = new System.Drawing.Size(180, 33);
             // 
             // tscbExistence
             // 
@@ -313,161 +352,54 @@
             "Уже нет",
             "В коллекции"});
             this.tscbExistence.Name = "tscbExistence";
-            this.tscbExistence.Size = new System.Drawing.Size(121, 23);
+            this.tscbExistence.Size = new System.Drawing.Size(180, 33);
             // 
-            // videoInfo
+            // recordView
             // 
-            this.videoInfo.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.videoInfo.Location = new System.Drawing.Point(0, 25);
-            this.videoInfo.Name = "videoInfo";
-            this.videoInfo.Size = new System.Drawing.Size(257, 622);
-            this.videoInfo.TabIndex = 0;
-            // 
-            // tsVideoInfo
-            // 
-            this.tsVideoInfo.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
-            this.tsVideoInfo.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tsddbTags,
-            this.tsddbUserScore,
-            this.tsbOpenInBrowser,
-            this.tsbBrowse,
-            this.tsbPlay});
-            this.tsVideoInfo.Location = new System.Drawing.Point(0, 0);
-            this.tsVideoInfo.Name = "tsVideoInfo";
-            this.tsVideoInfo.Size = new System.Drawing.Size(257, 25);
-            this.tsVideoInfo.TabIndex = 4;
-            this.tsVideoInfo.Text = "toolStrip1";
-            // 
-            // tsddbTags
-            // 
-            this.tsddbTags.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tsddbTags.Image = global::VideoLibrary.Properties.Resources.IconTag;
-            this.tsddbTags.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsddbTags.Name = "tsddbTags";
-            this.tsddbTags.Size = new System.Drawing.Size(29, 22);
-            this.tsddbTags.Text = "Тэги";
-            // 
-            // tsddbUserScore
-            // 
-            this.tsddbUserScore.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.tsddbUserScore.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tsmiUserScore0,
-            this.tsmiUserScore1,
-            this.tsmiUserScore2,
-            this.tsmiUserScore3,
-            this.tsmiUserScore4,
-            this.tsmiUserScore5});
-            this.tsddbUserScore.Image = ((System.Drawing.Image)(resources.GetObject("tsddbUserScore.Image")));
-            this.tsddbUserScore.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsddbUserScore.Name = "tsddbUserScore";
-            this.tsddbUserScore.Size = new System.Drawing.Size(26, 22);
-            this.tsddbUserScore.Text = "0";
-            // 
-            // tsmiUserScore0
-            // 
-            this.tsmiUserScore0.Name = "tsmiUserScore0";
-            this.tsmiUserScore0.Size = new System.Drawing.Size(80, 22);
-            this.tsmiUserScore0.Text = "0";
-            this.tsmiUserScore0.Click += new System.EventHandler(this.btUserScore_Click);
-            // 
-            // tsmiUserScore1
-            // 
-            this.tsmiUserScore1.ForeColor = System.Drawing.Color.Red;
-            this.tsmiUserScore1.Name = "tsmiUserScore1";
-            this.tsmiUserScore1.Size = new System.Drawing.Size(80, 22);
-            this.tsmiUserScore1.Text = "1";
-            this.tsmiUserScore1.Click += new System.EventHandler(this.btUserScore_Click);
-            // 
-            // tsmiUserScore2
-            // 
-            this.tsmiUserScore2.ForeColor = System.Drawing.Color.DarkOrange;
-            this.tsmiUserScore2.Name = "tsmiUserScore2";
-            this.tsmiUserScore2.Size = new System.Drawing.Size(80, 22);
-            this.tsmiUserScore2.Text = "2";
-            this.tsmiUserScore2.Click += new System.EventHandler(this.btUserScore_Click);
-            // 
-            // tsmiUserScore3
-            // 
-            this.tsmiUserScore3.ForeColor = System.Drawing.Color.DeepSkyBlue;
-            this.tsmiUserScore3.Name = "tsmiUserScore3";
-            this.tsmiUserScore3.Size = new System.Drawing.Size(80, 22);
-            this.tsmiUserScore3.Text = "3";
-            this.tsmiUserScore3.Click += new System.EventHandler(this.btUserScore_Click);
-            // 
-            // tsmiUserScore4
-            // 
-            this.tsmiUserScore4.ForeColor = System.Drawing.Color.GreenYellow;
-            this.tsmiUserScore4.Name = "tsmiUserScore4";
-            this.tsmiUserScore4.Size = new System.Drawing.Size(80, 22);
-            this.tsmiUserScore4.Text = "4";
-            this.tsmiUserScore4.Click += new System.EventHandler(this.btUserScore_Click);
-            // 
-            // tsmiUserScore5
-            // 
-            this.tsmiUserScore5.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
-            this.tsmiUserScore5.Name = "tsmiUserScore5";
-            this.tsmiUserScore5.Size = new System.Drawing.Size(80, 22);
-            this.tsmiUserScore5.Text = "5";
-            this.tsmiUserScore5.Click += new System.EventHandler(this.btUserScore_Click);
-            // 
-            // tsbOpenInBrowser
-            // 
-            this.tsbOpenInBrowser.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.tsbOpenInBrowser.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tsbOpenInBrowser.Image = global::VideoLibrary.Properties.Resources.IconInternet;
-            this.tsbOpenInBrowser.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbOpenInBrowser.Name = "tsbOpenInBrowser";
-            this.tsbOpenInBrowser.Size = new System.Drawing.Size(23, 22);
-            this.tsbOpenInBrowser.Text = "Кинопоиск";
-            this.tsbOpenInBrowser.Click += new System.EventHandler(this.tsbOpenInBrowser_Click);
-            // 
-            // tsbBrowse
-            // 
-            this.tsbBrowse.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.tsbBrowse.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tsbBrowse.Image = global::VideoLibrary.Properties.Resources.IconBrowse;
-            this.tsbBrowse.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbBrowse.Name = "tsbBrowse";
-            this.tsbBrowse.Size = new System.Drawing.Size(23, 22);
-            this.tsbBrowse.Text = "Открыть";
-            this.tsbBrowse.Click += new System.EventHandler(this.tsbBrowse_Click);
-            // 
-            // tsbPlay
-            // 
-            this.tsbPlay.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.tsbPlay.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tsbPlay.Image = global::VideoLibrary.Properties.Resources.IconPlay;
-            this.tsbPlay.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbPlay.Name = "tsbPlay";
-            this.tsbPlay.Size = new System.Drawing.Size(23, 22);
-            this.tsbPlay.Text = "Запуск";
-            this.tsbPlay.Click += new System.EventHandler(this.tsbPlay_Click);
+            this.recordView.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.recordView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.recordView.Location = new System.Drawing.Point(0, 0);
+            this.recordView.Margin = new System.Windows.Forms.Padding(6, 8, 6, 8);
+            this.recordView.Name = "recordView";
+            this.recordView.Size = new System.Drawing.Size(508, 1240);
+            this.recordView.TabIndex = 0;
             // 
             // pClear
             // 
             this.pClear.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pClear.Location = new System.Drawing.Point(0, 0);
+            this.pClear.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.pClear.Name = "pClear";
-            this.pClear.Size = new System.Drawing.Size(257, 647);
+            this.pClear.Size = new System.Drawing.Size(508, 1240);
             this.pClear.TabIndex = 1;
+            // 
+            // ucRecordEdit
+            // 
+            this.ucRecordEdit.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ucRecordEdit.Location = new System.Drawing.Point(0, 0);
+            this.ucRecordEdit.Name = "ucRecordEdit";
+            this.ucRecordEdit.Size = new System.Drawing.Size(508, 1240);
+            this.ucRecordEdit.TabIndex = 4;
             // 
             // ilVideo
             // 
             this.ilVideo.ColorDepth = System.Windows.Forms.ColorDepth.Depth32Bit;
-            this.ilVideo.ImageSize = new System.Drawing.Size(200, 256);
+            this.ilVideo.ImageSize = new System.Drawing.Size(250, 256);
             this.ilVideo.TransparentColor = System.Drawing.Color.Transparent;
             // 
             // msMain
             // 
+            this.msMain.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.msMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsmiAdd,
-            this.tsmiEdit,
             this.tsmiWant,
             this.tsmiTest,
-            this.tsmiTags});
+            this.tsmiTags,
+            this.tsmiLanguages});
             this.msMain.Location = new System.Drawing.Point(0, 0);
             this.msMain.Name = "msMain";
-            this.msMain.Size = new System.Drawing.Size(1138, 24);
+            this.msMain.Padding = new System.Windows.Forms.Padding(9, 3, 0, 3);
+            this.msMain.Size = new System.Drawing.Size(2129, 35);
             this.msMain.TabIndex = 2;
             this.msMain.Text = "menuStrip1";
             // 
@@ -475,29 +407,21 @@
             // 
             this.tsmiAdd.Image = global::VideoLibrary.Properties.Resources.add_icon;
             this.tsmiAdd.Name = "tsmiAdd";
-            this.tsmiAdd.Size = new System.Drawing.Size(87, 20);
+            this.tsmiAdd.Size = new System.Drawing.Size(126, 29);
             this.tsmiAdd.Text = "Добавить";
             this.tsmiAdd.Click += new System.EventHandler(this.tsmiAdd_Click);
-            // 
-            // tsmiEdit
-            // 
-            this.tsmiEdit.Image = global::VideoLibrary.Properties.Resources.IconEdit;
-            this.tsmiEdit.Name = "tsmiEdit";
-            this.tsmiEdit.Size = new System.Drawing.Size(115, 20);
-            this.tsmiEdit.Text = "Редактировать";
-            this.tsmiEdit.Click += new System.EventHandler(this.tsmiEdit_Click);
             // 
             // tsmiWant
             // 
             this.tsmiWant.Name = "tsmiWant";
-            this.tsmiWant.Size = new System.Drawing.Size(49, 20);
+            this.tsmiWant.Size = new System.Drawing.Size(69, 29);
             this.tsmiWant.Text = "Хотет";
             this.tsmiWant.Click += new System.EventHandler(this.tsmiWant_Click);
             // 
             // tsmiTest
             // 
             this.tsmiTest.Name = "tsmiTest";
-            this.tsmiTest.Size = new System.Drawing.Size(38, 20);
+            this.tsmiTest.Size = new System.Drawing.Size(53, 29);
             this.tsmiTest.Text = "test";
             this.tsmiTest.Visible = false;
             this.tsmiTest.Click += new System.EventHandler(this.tsmiTest_Click);
@@ -506,19 +430,27 @@
             // 
             this.tsmiTags.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
             this.tsmiTags.Name = "tsmiTags";
-            this.tsmiTags.Size = new System.Drawing.Size(44, 20);
+            this.tsmiTags.Size = new System.Drawing.Size(58, 29);
             this.tsmiTags.Text = "Тэги";
             this.tsmiTags.Click += new System.EventHandler(this.tsmiTags_Click);
             // 
+            // tsmiLanguages
+            // 
+            this.tsmiLanguages.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.tsmiLanguages.Name = "tsmiLanguages";
+            this.tsmiLanguages.Size = new System.Drawing.Size(75, 29);
+            this.tsmiLanguages.Text = "Языки";
+            this.tsmiLanguages.Click += new System.EventHandler(this.tsmiLanguages_Click);
+            // 
             // MainForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1138, 671);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
+            this.ClientSize = new System.Drawing.Size(2129, 1275);
             this.Controls.Add(this.scMain);
             this.Controls.Add(this.msMain);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.msMain;
+            this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.Name = "MainForm";
             this.Text = "Фильмотека";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MainForm_FormClosed);
@@ -527,13 +459,10 @@
             this.scMain.Panel1.ResumeLayout(false);
             this.scMain.Panel1.PerformLayout();
             this.scMain.Panel2.ResumeLayout(false);
-            this.scMain.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.scMain)).EndInit();
             this.scMain.ResumeLayout(false);
             this.msVideo.ResumeLayout(false);
             this.msVideo.PerformLayout();
-            this.tsVideoInfo.ResumeLayout(false);
-            this.tsVideoInfo.PerformLayout();
             this.msMain.ResumeLayout(false);
             this.msMain.PerformLayout();
             this.ResumeLayout(false);
@@ -545,11 +474,10 @@
 
         private System.Windows.Forms.DataGridView dgvVideo;
         private System.Windows.Forms.SplitContainer scMain;
-        private VideoInfo videoInfo;
+        private ucRecordView recordView;
         private System.Windows.Forms.Panel pClear;
         private System.Windows.Forms.MenuStrip msMain;
         private System.Windows.Forms.ToolStripMenuItem tsmiAdd;
-        private System.Windows.Forms.ToolStripMenuItem tsmiEdit;
         private System.Windows.Forms.MenuStrip msVideo;
         private System.Windows.Forms.ToolStripComboBox tscbSort;
         private System.Windows.Forms.ToolStripComboBox tscbTypeFilter;
@@ -562,26 +490,20 @@
         private System.Windows.Forms.ToolStripComboBox tscbExistence;
         private System.Windows.Forms.ToolStripMenuItem tsmiTest;
         private System.Windows.Forms.ToolStripMenuItem tsmiTags;
-        private System.Windows.Forms.ToolStrip tsVideoInfo;
-        private System.Windows.Forms.ToolStripDropDownButton tsddbTags;
-        private System.Windows.Forms.ToolStripDropDownButton tsddbUserScore;
-        private System.Windows.Forms.ToolStripButton tsbOpenInBrowser;
-        private System.Windows.Forms.ToolStripButton tsbBrowse;
-        private System.Windows.Forms.ToolStripButton tsbPlay;
-        private System.Windows.Forms.ToolStripMenuItem tsmiUserScore0;
-        private System.Windows.Forms.ToolStripMenuItem tsmiUserScore1;
-        private System.Windows.Forms.ToolStripMenuItem tsmiUserScore2;
-        private System.Windows.Forms.ToolStripMenuItem tsmiUserScore3;
-        private System.Windows.Forms.ToolStripMenuItem tsmiUserScore4;
-        private System.Windows.Forms.ToolStripMenuItem tsmiUserScore5;
+        private System.Windows.Forms.ToolStripMenuItem tsmiLanguages;
         private System.Windows.Forms.DataGridViewTextBoxColumn colName;
         private System.Windows.Forms.DataGridViewTextBoxColumn colType;
         private System.Windows.Forms.DataGridViewTextBoxColumn colYear;
         private System.Windows.Forms.DataGridViewTextBoxColumn colScore;
         private System.Windows.Forms.DataGridViewTextBoxColumn colDuration;
         private System.Windows.Forms.DataGridViewImageColumn colTags;
+        private System.Windows.Forms.DataGridViewImageColumn colSoundLanguages;
+        private System.Windows.Forms.DataGridViewImageColumn colSubLanguages;
         private System.Windows.Forms.DataGridViewTextBoxColumn colUserScore;
+        private System.Windows.Forms.DataGridViewImageColumn colResolution;
+        private System.Windows.Forms.DataGridViewImageColumn colHdr;
         private System.Windows.Forms.DataGridViewTextBoxColumn colSize;
+        private ucRecordEdit ucRecordEdit;
     }
 }
 

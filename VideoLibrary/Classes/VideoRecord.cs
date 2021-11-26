@@ -16,7 +16,7 @@ namespace VideoLibrary
 
         #region Common
 
-        private int _id = -1;
+        private int _id = 0;
         public int Id
         {
             get { return _id; }
@@ -42,6 +42,17 @@ namespace VideoLibrary
         {
             get { return _duration; }
             set { _duration = value; }
+        }
+
+        public string DurationStr
+        {
+            get
+            {
+                string minutes = "" + (Duration % 60);
+                if (minutes.Length == 1)
+                    minutes = "0" + minutes;
+                return Math.Floor((double)Duration / 60) + ":" + minutes;
+            }
         }
 
         private double _score = 0;
@@ -82,35 +93,6 @@ namespace VideoLibrary
         #endregion
 
         #region User's
-
-        private Attitude _attitude = Attitude.Unknown;
-        [XmlIgnore]
-        public Attitude Attitude
-        {
-            get { return _attitude; }
-            set { _attitude = value; }
-        }
-
-        public int AttitudeInt
-        {
-            get { return AttitudeToInt(Attitude); }
-            set { Attitude = IntToAttitude(value); }
-        }
-
-        public Image AttitudeImage
-        {
-            get
-            {
-                switch (Attitude)
-                {
-                    case Attitude.Both: return Resources.IconBoth;
-                    case Attitude.One: return Resources.IconOne;
-                    case Attitude.None: return Resources.IconNone;
-                    case Attitude.Trash: return Resources.IconTrash;
-                    default: return null;
-                }
-            }
-        }
 
         private int _userScore = 0;
         public int UserScore
@@ -159,6 +141,25 @@ namespace VideoLibrary
 
         #region File
 
+        private bool _isHdr = false;
+        public bool IsHdr
+        {
+            get { return _isHdr; }
+            set { _isHdr = value; }
+        }
+
+        [XmlIgnore]
+        public Image IsHdrImage
+        {
+            get
+            {
+                if (IsHdr)
+                    return Resources.IconHDR;
+                else
+                    return ClearImage;
+            }
+        }
+
         private Existence _existence = Existence.Unknown;
         [XmlIgnore]
         public Existence Existence
@@ -191,22 +192,36 @@ namespace VideoLibrary
             }
         }
 
-        public bool CanPlay
-        {
-            get
-            {
-                FileAttributes? attr = GetFileAttributes(Path);
-                if (!attr.HasValue)
-                    return false;
-                return !attr.Value.HasFlag(FileAttributes.Directory) && File.Exists(Path);
-            }
-        }
+        public bool CanPlay { get { return CanPlayFile(Path); } }
 
         public bool CanBrowse
         {
             get
             {
                 return !string.IsNullOrEmpty(DirectoryPath) && Directory.Exists(DirectoryPath);
+            }
+        }
+
+        private Resolution _resolution = Resolution.Unknown;
+        public Resolution Resolution
+        {
+            get { return _resolution; }
+            set { _resolution = value; }
+        }
+
+        [XmlIgnore]
+        public Image ResolutionImage
+        {
+            get
+            {
+                switch (Resolution)
+                {
+                    case Resolution.UHD: return Resources.IconUHD;
+                    case Resolution.FHD: return Resources.IconFHD;
+                    case Resolution.HD: return Resources.IconHD;
+                    case Resolution.SD: return Resources.IconSD;
+                    default: return ClearImage;
+                }
             }
         }
 
@@ -284,6 +299,64 @@ namespace VideoLibrary
             return File.GetAttributes(path);
         }
 
+        List<Language> _subLanguages;
+        [XmlIgnore]
+        public List<Language> SubLanguages
+        {
+            get { return _subLanguages; }
+            set { _subLanguages = value; }
+        }
+
+        public int[] SubLanguagesIds
+        {
+            get
+            {
+                List<int> result = new List<int>();
+                SubLanguages.ForEach(t => result.Add(t.Id));
+                return result.ToArray();
+            }
+            set
+            {
+                foreach (int id in value)
+                    SubLanguages.AddRange(LanguageCollection.GetInstance().Languages.FindAll(t => t.Id == id));
+            }
+        }
+
+        [XmlIgnore]
+        public Image SubLanguagesPic
+        {
+            get { return Language.GetLanguagesPic(SubLanguages); }
+        }
+
+        List<Language> _soundLanguages;
+        [XmlIgnore]
+        public List<Language> SoundLanguages
+        {
+            get { return _soundLanguages; }
+            set { _soundLanguages = value; }
+        }
+
+        public int[] SoundLanguagesIds
+        {
+            get
+            {
+                List<int> result = new List<int>();
+                SoundLanguages.ForEach(t => result.Add(t.Id));
+                return result.ToArray();
+            }
+            set
+            {
+                foreach (int id in value)
+                    SoundLanguages.AddRange(LanguageCollection.GetInstance().Languages.FindAll(t => t.Id == id));
+            }
+        }
+
+        [XmlIgnore]
+        public Image SoundLanguagesPic
+        {
+            get { return Language.GetLanguagesPic(SoundLanguages); }
+        }
+
         #endregion
 
         #endregion
@@ -291,6 +364,8 @@ namespace VideoLibrary
         public VideoRecord()
         {
             Tags = new List<VideoTag>();
+            SubLanguages = new List<Language>();
+            SoundLanguages = new List<Language>();
         }
 
         public override string ToString()
@@ -303,6 +378,16 @@ namespace VideoLibrary
             _sizeNum = -1;
         }
 
+        public static Image ClearImage { get { return new Bitmap(1, 1, System.Drawing.Imaging.PixelFormat.Format32bppArgb); } }
+
+        public static bool CanPlayFile(string path)
+        {
+            FileAttributes? attr = GetFileAttributes(path);
+            if (!attr.HasValue)
+                return false;
+            return !attr.Value.HasFlag(FileAttributes.Directory) && File.Exists(path);
+        }
+
         #region Convert
 
         public static string TypeToString(VideoType type)
@@ -312,6 +397,7 @@ namespace VideoLibrary
                 case VideoType.Movie: return "Фильм";
                 case VideoType.Cartoon: return "Мульт";
                 case VideoType.Series: return "Сериал";
+                case VideoType.MiniSeries: return "МиниСериал";
                 default: return "ХЗ";
             }
         }
@@ -323,31 +409,8 @@ namespace VideoLibrary
                 case "Фильм": return VideoType.Movie;
                 case "Мульт": return VideoType.Cartoon;
                 case "Сериал": return VideoType.Series;
+                case "МиниСериал": return VideoType.MiniSeries;
                 default: return VideoType.Unknown;
-            }
-        }
-
-        public static int AttitudeToInt(Attitude attitude)
-        {
-            switch (attitude)
-            {
-                case Attitude.Both: return 2;
-                case Attitude.One: return 1;
-                case Attitude.None: return 0;
-                case Attitude.Trash: return 3;
-                default: return -1;
-            }
-        }
-
-        public static Attitude IntToAttitude(int attitude)
-        {
-            switch (attitude)
-            {
-                case 2: return Attitude.Both;
-                case 1: return Attitude.One;
-                case 0: return Attitude.None;
-                case 3: return Attitude.Trash;
-                default: return Attitude.Unknown;
             }
         }
 
@@ -403,6 +466,10 @@ namespace VideoLibrary
                 return -1;
             if (b.Type == VideoType.Cartoon)
                 return 1;
+            if (a.Type == VideoType.MiniSeries)
+                return -1;
+            if (b.Type == VideoType.MiniSeries)
+                return 1;
             if (a.Type == VideoType.Series)
                 return -1;
             if (b.Type == VideoType.Series)
@@ -450,12 +517,44 @@ namespace VideoLibrary
                 return -1;
         }
 
+        public static int CompareByQuality(VideoRecord a, VideoRecord b)
+        {
+            if (a.Type != b.Type)
+                return CompareByType(a, b);
+
+            int res = CompareByResolution(a, b);
+            if (res != 0)
+                return res;
+
+            int hdr = CompareByHdr(a, b);
+            if (hdr != 0)
+                return hdr;
+
+            return CompareByName(a, b);
+        }
+
+        private static int CompareByResolution(VideoRecord a, VideoRecord b)
+        {
+            return (int)b.Resolution - (int)a.Resolution;
+        }
+
+        private static int CompareByHdr(VideoRecord a, VideoRecord b)
+        {
+            if (a.IsHdr == b.IsHdr)
+                return 0;
+            else if (a.IsHdr)
+                return -1;
+            else
+                return 1;
+        }
+
         #endregion
     }
 
     public class VideoDataCollection
     {
         private static string fileName = "VideoList.xml";
+        private static VideoDataCollection _videoDataCollection;
 
         private List<VideoRecord> _videoList;
         public List<VideoRecord> VideoList
@@ -469,9 +568,32 @@ namespace VideoLibrary
             VideoList = new List<VideoRecord>();
         }
 
-        public void Save()
+        public static VideoDataCollection GetInstance()
+        {
+            if (_videoDataCollection == null)
+                _videoDataCollection = Load();
+            return _videoDataCollection;
+        }
+
+        public bool Save()
         {
             XmlSerializeHelper.SerializeAndSave(fileName, this);
+            return Check();
+        }
+
+        private bool Check()
+        {
+            try
+            {
+                VideoDataCollection toCheck = fileName.LoadAndDeserialize<VideoDataCollection>();
+                if (toCheck.VideoList.Count != VideoList.Count)
+                    return false;
+            }
+            catch
+            {
+                return false;
+            }
+            return true;
         }
 
         public static VideoDataCollection Load()
@@ -503,16 +625,8 @@ namespace VideoLibrary
         Movie,
         Cartoon,
         Series,
+        MiniSeries,
         Unknown
-    }
-
-    public enum Attitude
-    {
-        Both,
-        One,
-        None,
-        Unknown,
-        Trash
     }
 
     public enum Existence
@@ -522,5 +636,14 @@ namespace VideoLibrary
         WillHave,
         Collection,
         Unknown
+    }
+
+    public enum Resolution
+    {
+        Unknown = 0,
+        SD = 540,
+        HD = 720,
+        FHD = 1080,
+        UHD = 2160
     }
 }

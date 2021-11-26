@@ -14,10 +14,12 @@ namespace VideoLibrary
     public partial class FormAdd : Form
     {
         public VideoRecord Record = null;
+        private List<VideoRecord> _records;
 
-        public FormAdd()
+        public FormAdd(List<VideoRecord> records)
         {
             InitializeComponent();
+            _records = records;
         }
 
         public FormAdd(VideoRecord record)
@@ -120,7 +122,7 @@ namespace VideoLibrary
         private void btBrowse_Click(object sender, EventArgs e)
         {
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
-                tbPath.Text = File.Exists(openFileDialog1.FileName) ? openFileDialog1.FileName : System.IO.Path.GetDirectoryName(openFileDialog1.FileName);
+                tbPath.Text = File.Exists(openFileDialog1.FileName) ? openFileDialog1.FileName : Path.GetDirectoryName(openFileDialog1.FileName);
         }
 
         private void btGetFromInternet_Click(object sender, EventArgs e)
@@ -129,11 +131,17 @@ namespace VideoLibrary
             if (id <= 0)
                 return;
 
+            if (_records != null)
+                if (_records.Exists(v => v.Id == id))
+                    if (MessageBox.Show("Запись с указанным Id уже существует. Продолжить?", "Дубликат", MessageBoxButtons.YesNo) != DialogResult.Yes)
+                        return;
+
             //bool success = false;
             //bool first = true;
 
             //while (!success)
-                try
+            HtmlHelper.SaveVideoPicture(id);
+            try
                 {
                     //if (!first)
                     //    if (MessageBox.Show("Попробовать ещё раз?", "Повторная попытка", MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
@@ -144,11 +152,14 @@ namespace VideoLibrary
                 }
                 catch (Exception ex)
                 {
-                    tbSynopsis.Text = ex.Message;
-                    MessageBox.Show("Не получилось :(");
+                    MessageBox.Show("Не получилось :(" + Environment.NewLine + ex.Message);
                     //new FormBrowser(ex.Message).ShowDialog();
                 }
-            HtmlHelper.SaveVideoPicture(id);
+        }
+
+        private void btCancel_Click(object sender, EventArgs e)
+        {
+            Close();
         }
     }
 }

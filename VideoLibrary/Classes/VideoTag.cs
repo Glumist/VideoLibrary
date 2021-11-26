@@ -83,13 +83,9 @@ namespace VideoLibrary
                 if (tag.Image != null)
                     tagPics.Add(tag.Image);
             if (tagPics.Count == 0)
-                return null;
-            Bitmap pic = new Bitmap(VideoTag.ImageSize * tagPics.Count, VideoTag.ImageSize);
-            using (Graphics g = Graphics.FromImage(pic))
-                for (int i = 0; i < tagPics.Count; i++)
-                    g.DrawImage(tagPics[i], i * VideoTag.ImageSize, 0, VideoTag.ImageSize, VideoTag.ImageSize);
+                return VideoRecord.ClearImage;
 
-            return pic;
+            return PicHelper.ConcatPics(tagPics);
         }
     }
 

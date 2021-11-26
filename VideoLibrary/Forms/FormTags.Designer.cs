@@ -45,9 +45,10 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.lvTags.CheckBoxes = true;
-            this.lvTags.Location = new System.Drawing.Point(12, 38);
+            this.lvTags.Location = new System.Drawing.Point(18, 58);
+            this.lvTags.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.lvTags.Name = "lvTags";
-            this.lvTags.Size = new System.Drawing.Size(379, 459);
+            this.lvTags.Size = new System.Drawing.Size(566, 704);
             this.lvTags.SmallImageList = this.ilTags;
             this.lvTags.TabIndex = 0;
             this.lvTags.UseCompatibleStateImageBehavior = false;
@@ -65,18 +66,20 @@
             // 
             this.tbText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.tbText.Location = new System.Drawing.Point(38, 12);
+            this.tbText.Location = new System.Drawing.Point(57, 18);
+            this.tbText.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.tbText.Name = "tbText";
-            this.tbText.Size = new System.Drawing.Size(319, 20);
+            this.tbText.Size = new System.Drawing.Size(476, 26);
             this.tbText.TabIndex = 2;
             // 
             // btAdd
             // 
             this.btAdd.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btAdd.Image = global::VideoLibrary.Properties.Resources.add_icon;
-            this.btAdd.Location = new System.Drawing.Point(363, 9);
+            this.btAdd.Location = new System.Drawing.Point(544, 14);
+            this.btAdd.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.btAdd.Name = "btAdd";
-            this.btAdd.Size = new System.Drawing.Size(28, 25);
+            this.btAdd.Size = new System.Drawing.Size(42, 38);
             this.btAdd.TabIndex = 3;
             this.btAdd.UseVisualStyleBackColor = true;
             this.btAdd.Click += new System.EventHandler(this.btAdd_Click);
@@ -84,9 +87,10 @@
             // btOk
             // 
             this.btOk.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.btOk.Location = new System.Drawing.Point(163, 503);
+            this.btOk.Location = new System.Drawing.Point(244, 774);
+            this.btOk.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.btOk.Name = "btOk";
-            this.btOk.Size = new System.Drawing.Size(75, 23);
+            this.btOk.Size = new System.Drawing.Size(112, 35);
             this.btOk.TabIndex = 4;
             this.btOk.Text = "OK";
             this.btOk.UseVisualStyleBackColor = true;
@@ -95,23 +99,25 @@
             // pbImage
             // 
             this.pbImage.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pbImage.Location = new System.Drawing.Point(12, 12);
+            this.pbImage.Location = new System.Drawing.Point(18, 18);
+            this.pbImage.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.pbImage.Name = "pbImage";
-            this.pbImage.Size = new System.Drawing.Size(20, 19);
+            this.pbImage.Size = new System.Drawing.Size(29, 28);
             this.pbImage.TabIndex = 1;
             this.pbImage.TabStop = false;
             this.pbImage.Click += new System.EventHandler(this.pbImage_Click);
             // 
             // FormTags
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(403, 538);
+            this.ClientSize = new System.Drawing.Size(604, 828);
             this.Controls.Add(this.btOk);
             this.Controls.Add(this.btAdd);
             this.Controls.Add(this.tbText);
             this.Controls.Add(this.pbImage);
             this.Controls.Add(this.lvTags);
+            this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.Name = "FormTags";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Тэги";

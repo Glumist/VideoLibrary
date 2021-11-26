@@ -40,6 +40,12 @@ namespace VideoLibrary
             tscbTypeFilter.SelectedIndexChanged += tscb_SelectedIndexChanged;
             tscbExistence.SelectedIndexChanged += tscb_SelectedIndexChanged;
             tscbView.SelectedIndexChanged += tscbView_SelectedIndexChanged;
+
+            recordView.VideoRecordEditClicked += RecordView_VideoRecordEditClicked;
+            recordView.VideoRecordSaved += RecordView_VideoRecordSaved;
+
+            ucRecordEdit.VideoRecordAdded += UcRecordEdit_VideoRecordAdded;
+            ucRecordEdit.VideoRecordSaved += UcRecordEdit_VideoRecordSaved;
         }
 
         private void BgwImagesLoader_DoWork(object sender, DoWorkEventArgs e)
@@ -69,6 +75,43 @@ namespace VideoLibrary
             FileHelper.DeleteImages(ids);
         }
 
+        #region Events
+
+        private void RecordView_VideoRecordEditClicked(object sender, VideoRecord e)
+        {
+            ucRecordEdit.SetRecord(e);
+            ucRecordEdit.BringToFront();
+        }
+
+        private void RecordView_VideoRecordSaved(object sender, VideoRecord e)
+        {
+            _videoCollection.Save();
+            RefreshLists();
+            RefreshImage(e.Id);
+        }
+
+        private void UcRecordEdit_VideoRecordAdded(object sender, VideoRecord e)
+        {
+            _videoCollection.Add(e);
+            _videoCollection.Save();
+            RefreshLists();
+            RefreshImage(e.Id);
+            ucRecordEdit.SendToBack();
+            SelectRecord(e);
+        }
+
+        private void UcRecordEdit_VideoRecordSaved(object sender, VideoRecord e)
+        {
+            e.ResetSizeNum();
+            _videoCollection.Save();
+            RefreshLists();
+            RefreshImage(e.Id);
+            ucRecordEdit.SendToBack();
+            SelectRecord(e);
+        }
+
+        #endregion
+
         #region Lists
 
         private void RefreshLists(bool withImages = true)
@@ -79,6 +122,7 @@ namespace VideoLibrary
             RefreshListView();
             RefreshStat();
             RefreshTags();
+            ucRecordEdit.UpdateLanguages();
         }
 
         private List<VideoRecord> GetFilteredSortedList()
@@ -99,6 +143,8 @@ namespace VideoLibrary
                 filtered = filtered.FindAll(v => v.Type == VideoType.Cartoon);
             else if (tscbTypeFilter.SelectedIndex == 3)
                 filtered = filtered.FindAll(v => v.Type == VideoType.Series);
+            else if (tscbTypeFilter.SelectedIndex == 4)
+                filtered = filtered.FindAll(v => v.Type == VideoType.MiniSeries);
 
             //if (_attitudeFilter != Attitude.Unknown)
             //    filtered = filtered.FindAll(v => v.Attitude == _attitudeFilter);
@@ -126,6 +172,8 @@ namespace VideoLibrary
                 filtered.Sort(VideoRecord.CompareByYear);
             else if (tscbSort.SelectedIndex == 5)
                 filtered.Sort(VideoRecord.CompareBySize);
+            else if (tscbSort.SelectedIndex == 6)
+                filtered.Sort(VideoRecord.CompareByQuality);
 
             return filtered;
         }
@@ -176,12 +224,15 @@ namespace VideoLibrary
             Dictionary<string, Image> pics = FileHelper.GetAllPics(currentIds, ilVideo.ImageSize.Height);
             //log += "end loading pics " + string.Format("{0:mm:ss.ffff}", DateTime.Now) + Environment.NewLine;
             foreach (string id in pics.Keys)
-                ilVideo.Images.Add(id, pics[id]);
+            {
+                Image complexImage = PicHelper.MakeComplexRecordImage(pics[id], _videoCollection.VideoList.Find(v => v.Id.ToString() == id));
+                ilVideo.Images.Add(id, complexImage);
+            }
             //log += "refresh list view " + string.Format("{0:mm:ss.ffff}", DateTime.Now) + Environment.NewLine;
 
             if (init)
             {
-                lvVideo.LargeImageList = ilVideo;
+                lvVideo.LargeImageList =  ilVideo;
                 RefreshListView();
             }
             //log += "list view refreshed " + string.Format("{0:mm:ss.ffff}", DateTime.Now) + Environment.NewLine;
@@ -190,19 +241,19 @@ namespace VideoLibrary
                 picsLoaded = true;
         }
 
+        private void RefreshImage(int id)
+        {
+            string idStr = "" + id;
+            Image origImage = FileHelper.GetImage(id, ilVideo.ImageSize.Height);
+            Image complexImage = PicHelper.MakeComplexRecordImage(origImage, _videoCollection.VideoList.Find(v => v.Id == id));
+            ilVideo.Images.RemoveByKey(idStr);
+            ilVideo.Images.Add(idStr, complexImage);
+        }
+
         private void RefreshTags()
         {
             VideoTagCollection.Refresh();
             VideoTagCollection tags = VideoTagCollection.GetInstance();
-
-            tsddbTags.DropDownItems.Clear();
-            foreach (VideoTag tag in tags.Tags)
-            {
-                ToolStripMenuItem tsmi = new ToolStripMenuItem(tag.Text, tag.Image);
-                tsmi.Tag = tag;
-                tsmi.Click += TsmiChangeTag_Click;
-                tsddbTags.DropDownItems.Add(tsmi);
-            }
 
             tsmiTagsFilter.DropDownItems.Clear();
 
@@ -222,8 +273,10 @@ namespace VideoLibrary
                 tsmi.Click += TsmiFilterTag_Click;
                 tsmiTagsFilter.DropDownItems.Add(tsmi);
             }
-        }
 
+            recordView.UpdateTags();
+        }
+        
         private void RefreshStat()
         {
             List<VideoRecord> filtered = GetFilteredSortedList();
@@ -265,6 +318,17 @@ namespace VideoLibrary
             ssVideo.Items.Add(Resources.IconQuestion);
             ssVideo.Items.Add(filtered.FindAll(v => v.Type == VideoType.Series && v.Tags.Count == 0).Count.ToString());
 
+            ssVideo.Items.Add("МиниСериалы:");
+            ssVideo.Items.Add(filtered.FindAll(v => v.Type == VideoType.MiniSeries).Count.ToString());
+            foreach (VideoTag tag in tags.Tags)
+                if (tag.ShowInStat && tag.Image != null)
+                {
+                    ssVideo.Items.Add(tag.Image);
+                    ssVideo.Items.Add(filtered.FindAll(v => v.Type == VideoType.MiniSeries && v.Tags.Exists(t => t.Id == tag.Id)).Count.ToString());
+                }
+            ssVideo.Items.Add(Resources.IconQuestion);
+            ssVideo.Items.Add(filtered.FindAll(v => v.Type == VideoType.MiniSeries && v.Tags.Count == 0).Count.ToString());
+
             /*tsslMovieCount.Text = filtered.FindAll(v => v.Type == VideoType.Movie).Count.ToString();
             tsslMovieBothCount.Text = filtered.FindAll(v => v.Type == VideoType.Movie && v.Attitude == Attitude.Both).Count.ToString();
             tsslMovieOneCount.Text = filtered.FindAll(v => v.Type == VideoType.Movie && v.Attitude == Attitude.One).Count.ToString();
@@ -282,7 +346,7 @@ namespace VideoLibrary
             tsslSeriesNanCount.Text = filtered.FindAll(v => v.Type == VideoType.Series && v.Attitude == Attitude.Unknown).Count.ToString();*/
         }
 
-        private void ColorTable(DataGridView dgv)
+        /*private void ColorTable(DataGridView dgv)
         {
             foreach (DataGridViewRow row in dgv.Rows)
             {
@@ -300,7 +364,7 @@ namespace VideoLibrary
                     case 5: ColorRow(row, tsmiUserScore5.ForeColor); break;
                 }
             }
-        }
+        }*/
 
         private void ColorRow(DataGridViewRow row, Color color)
         {
@@ -313,23 +377,9 @@ namespace VideoLibrary
             VideoRecord record = GetSelectedRecord();
             if (record != null)
             {
-                videoInfo.SetVideoRecord(record);
-
-                tsddbUserScore.Text = record.UserScore.ToString();
-                switch (record.UserScore)
-                {
-                    case 0: tsddbUserScore.ForeColor = tsmiUserScore0.ForeColor; break;
-                    case 1: tsddbUserScore.ForeColor = tsmiUserScore1.ForeColor; break;
-                    case 2: tsddbUserScore.ForeColor = tsmiUserScore2.ForeColor; break;
-                    case 3: tsddbUserScore.ForeColor = tsmiUserScore3.ForeColor; break;
-                    case 4: tsddbUserScore.ForeColor = tsmiUserScore4.ForeColor; break;
-                    case 5: tsddbUserScore.ForeColor = tsmiUserScore5.ForeColor; break;
-                }
-
-                tsbPlay.Enabled = record.CanPlay;
-                tsbBrowse.Enabled = record.CanBrowse;
-
-                pClear.SendToBack();
+                recordView.SetVideoRecord(record);
+                recordView.BringToFront();
+                //pClear.SendToBack();
             }
             else
                 pClear.BringToFront();
@@ -371,6 +421,12 @@ namespace VideoLibrary
             }
 
             return null;
+        }
+
+        private void SelectRecord(VideoRecord record)
+        {
+            SelectRecord(dgvVideo, record);
+            SelectRecord(lvVideo, record);
         }
 
         private void SelectRecord(DataGridView dgv, VideoRecord record)
@@ -417,29 +473,8 @@ namespace VideoLibrary
 
         private void tsmiAdd_Click(object sender, EventArgs e)
         {
-            FormAdd form = new FormAdd();
-            if (form.ShowDialog() == DialogResult.OK)
-            {
-                if (_videoCollection.VideoList.Exists(v => v.Id == form.Record.Id))
-                    if (MessageBox.Show("Запись с указанным Id уже существует. Продолжить?", "Дубликат", MessageBoxButtons.YesNo) != DialogResult.Yes)
-                        return;
-                _videoCollection.Add(form.Record);
-                _videoCollection.Save();
-                RefreshLists();
-            }
-        }
-
-        private void tsmiEdit_Click(object sender, EventArgs e)
-        {
-            VideoRecord record = GetSelectedRecord();
-            if (record == null)
-                return;
-            if (new FormAdd(record).ShowDialog() == DialogResult.OK)
-            {
-                record.ResetSizeNum();
-                _videoCollection.Save();
-                RefreshLists();
-            }
+            ucRecordEdit.SetRecord(null);
+            ucRecordEdit.BringToFront();
         }
 
         private void tsmiWant_Click(object sender, EventArgs e)
@@ -464,20 +499,11 @@ namespace VideoLibrary
                 RefreshLists();
         }
 
-        private void TsmiChangeTag_Click(object sender, EventArgs e)
+        private void tsmiLanguages_Click(object sender, EventArgs e)
         {
-            VideoRecord record = GetSelectedRecord();
-            if (record == null)
-                return;
-
-            VideoTag tag = ((ToolStripMenuItem)sender).Tag as VideoTag;
-            if (record.Tags.Exists(t => t.Id == tag.Id))
-                record.Tags.RemoveAll(t => t.Id == tag.Id);
-            else
-                record.Tags.Add(tag);
-
-            _videoCollection.Save();
-            RefreshLists();
+            FormLanguages form = new FormLanguages();
+            if (form.ShowDialog() == DialogResult.OK)
+                RefreshLists();
         }
 
         private void TsmiFilterTag_Click(object sender, EventArgs e)
@@ -509,28 +535,6 @@ namespace VideoLibrary
             RefreshLists();
         }
 
-        private void btUserScore_Click(object sender, EventArgs e)
-        {
-            VideoRecord record = GetSelectedRecord();
-            if (record == null)
-                return;
-
-            if (sender == tsmiUserScore0)
-                record.UserScore = 0;
-            else if (sender == tsmiUserScore1)
-                record.UserScore = 1;
-            else if (sender == tsmiUserScore2)
-                record.UserScore = 2;
-            else if (sender == tsmiUserScore3)
-                record.UserScore = 3;
-            else if (sender == tsmiUserScore4)
-                record.UserScore = 4;
-            else if (sender == tsmiUserScore5)
-                record.UserScore = 5;
-            _videoCollection.Save();
-            RefreshLists();
-        }
-
         /*private void tsmiAttitudeFilter_Click(object sender, EventArgs e)
         {
             if (sender == tsmiAttitudeBoth)
@@ -558,35 +562,6 @@ namespace VideoLibrary
                 lvVideo.BringToFront();
 
             RefreshInfo();
-        }
-
-        private void tsbPlay_Click(object sender, EventArgs e)
-        {
-            VideoRecord record = GetSelectedRecord();
-            if (record != null && record.CanPlay)
-                Process.Start(record.Path);
-        }
-
-        private void tsbBrowse_Click(object sender, EventArgs e)
-        {
-            VideoRecord record = GetSelectedRecord();
-            if (record == null)
-                return;
-
-            if (record.CanPlay)
-                Process.Start("explorer.exe", "/select, \"" + record.Path + "\"");
-            else if (record.CanBrowse)
-                Process.Start(record.DirectoryPath);
-        }
-
-        private void tsbOpenInBrowser_Click(object sender, EventArgs e)
-        {
-            VideoRecord record = GetSelectedRecord();
-            
-            string url = record.Url;
-            if (url == "")
-                url = "http://www.kinopoisk.ru/film/" + record.Id;
-            System.Diagnostics.Process.Start(url);
         }
 
         #endregion

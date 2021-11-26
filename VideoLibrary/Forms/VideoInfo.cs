@@ -31,7 +31,7 @@ namespace VideoLibrary
 
             try
             {
-                Image image = FileHelper.GetImage(_record.Id, 300);
+                Image image = FileHelper.GetImage(_record.Id, 500);
                 if (image != null)
                 {
                     pbImage.Image = image;

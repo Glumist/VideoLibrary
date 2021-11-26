@@ -12,6 +12,8 @@ namespace VideoLibrary
 {
     public class HtmlHelper
     {
+        static CookieContainer _cookieContainer;
+
         class CookieAwareWebClient : WebClient
         {
             private CookieContainer cc = new CookieContainer();
@@ -38,7 +40,7 @@ namespace VideoLibrary
 
         private static WebClient GetWebClient()
         {
-            if (_client == null)
+            //if (_client == null)
             {
                 _client = new WebClient();
                 _client.Proxy = null;
@@ -51,9 +53,21 @@ namespace VideoLibrary
             return _client;
         }
 
-        public static string GetHtmlString(string url)
+        /*public static string GetHtmlString(string url)
+        {
+            using (var client = new System.Net.Http.HttpClient())
+            {
+                client.DefaultRequestHeaders.Add("Accept-Language", "ru-Ru,ru;q=0.5");
+                client.DefaultRequestHeaders.Add("Accept-Charset", "Windows-1252,utf-8;q=0.7,*;q=0.7");
+                client.DefaultRequestHeaders.Add("UserAgent", "Opera/9.80 (Windows NT 6.1; WOW64; MRA 8.2 (build 6870)) Presto/2.12.388 Version/12.16");
+                return (client.GetStringAsync(url)).Result;
+            }
+        }*/
+
+        /*public static string GetHtmlString(string url)
         {
             WebClient client = GetWebClient();
+*/
 
             /*if (System.Web.HttpContext.Current.Session["cookie"] != null)
                 _cookies = System.Web.HttpContext.Current.Session["cookie"].ToString();
@@ -73,10 +87,55 @@ namespace VideoLibrary
             /*client.Headers.Add(HttpRequestHeader.Cookie, "spravka=dD0xNDYyMjE1OTU1O2k9MTc4LjE1NS40LjE0ODt1PTE0NjIyMTU5NTU4OTQ4OTYyNjE7aD02MzE3MzM5M2NmZGMzZWE3ZGU0ZjcyY2Y4NGViY2I3OA==;" +
                 "csrftoken=s%3ABchhFKDv1fTKpTIBVLhn7uEM.0GosU8cxOa0wNyLRbTXNM2aYD8C%2F2zQ6ntAJDAYCUjg;" +
                 "_ym_uid=1493751959901745063;" + "_ym_isad=1;" + "_ym_visorc_10630330=w");*/
-
-            //client.Headers.Add("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:18.0) Gecko/20100101 Firefox/18.0");
-            //return client.DownloadString(url);
+                
+            /*client.Headers.Add("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:18.0) Gecko/20100101 Firefox/18.0");
             return client.DownloadString(url);
+        }*/
+
+        public static string GetHtmlString(string url)
+        {
+            HttpWebRequest req = (HttpWebRequest)WebRequest.Create(url);
+            req.AllowAutoRedirect = true;
+            req.ContentType = "application/x-www-form-urlencoded";
+            req.Referer = "http://google.com";
+            req.UserAgent = "Mozilla/5.0 (Windows NT 10.0; WOW64; rv:50.0) Gecko/20100101 Firefox/50.0";
+
+            if (_cookieContainer == null)
+            {
+                _cookieContainer = new CookieContainer();
+                _cookieContainer.Add(new Uri("https://www.kinopoisk.ru"), new Cookie("_ym_d", "1609170128"));
+                _cookieContainer.Add(new Uri("https://www.kinopoisk.ru"), new Cookie("_ym_isad", "1"));
+                _cookieContainer.Add(new Uri("https://www.kinopoisk.ru"), new Cookie("_ym_uid", "1609162596484861180"));
+                _cookieContainer.Add(new Uri("https://www.kinopoisk.ru"), new Cookie("_ym_visorc_10630330", "b"));
+                _cookieContainer.Add(new Uri("https://www.kinopoisk.ru"), new Cookie("_ym_visorc_22663942", "b"));
+                _cookieContainer.Add(new Uri("https://www.kinopoisk.ru"), new Cookie("_ym_visorc_238724", "w"));
+                _cookieContainer.Add(new Uri("https://www.kinopoisk.ru"), new Cookie("_ym_visorc_238735", "w"));
+                _cookieContainer.Add(new Uri("https://www.kinopoisk.ru"), new Cookie("_ym_visorc_26812653", "b"));
+                _cookieContainer.Add(new Uri("https://www.kinopoisk.ru"), new Cookie("_ym_visorc_56177992", "b"));
+                _cookieContainer.Add(new Uri("https://www.kinopoisk.ru"), new Cookie("cmtchd", "MTYwOTE2OTE1OTMwOQ"));
+                _cookieContainer.Add(new Uri("https://www.kinopoisk.ru"), new Cookie("crookie", "D8yRMv4OHAQd3fhZjuKRhaLPuSCyDzYh/GehxpmL+fABjB398fHmvlvoZ8ooz6QXhmsqurAv+/XXrfWIRTEWiZKL08I="));
+                _cookieContainer.Add(new Uri("https://www.kinopoisk.ru"), new Cookie("gdpr", "0"));
+                _cookieContainer.Add(new Uri("https://www.kinopoisk.ru"), new Cookie("yandexuid", "6276612201542871157"));
+                _cookieContainer.Add(new Uri("https://www.kinopoisk.ru"), new Cookie("yandex_gid", "35"));
+                _cookieContainer.Add(new Uri("https://www.kinopoisk.ru"), new Cookie("i", "J8dgPYD8cVXqny6MRj7Cw5tmzRmabXnjg4k7OH0qUt5aVcz/IBpKIxlcrts4J7rpZgEPeK61p2QCJEo0AhHU9ipr7sM="));
+                _cookieContainer.Add(new Uri("https://www.kinopoisk.ru"), new Cookie("kpunk", "1"));
+                _cookieContainer.Add(new Uri("https://www.kinopoisk.ru"), new Cookie("mda", "0"));
+                _cookieContainer.Add(new Uri("https://www.kinopoisk.ru"), new Cookie("mda2_beacon", "1609169716037"));
+                _cookieContainer.Add(new Uri("https://www.kinopoisk.ru"), new Cookie("spravka", "dD0xNjA5MTY5MjAwO2k9MTg1LjUyLjEzNC4xMTI7dT0xNjA5MTY5MjAwMDUxNjU5NTk1O2g9MDVmYmZlNzg3NmNkYjEzOTkzMjRiOGFjM2RhMGY4N2Q="));
+                _cookieContainer.Add(new Uri("https://www.kinopoisk.ru"), new Cookie("sso_status", "sso.passport.yandex.ru:synchronized"));
+                _cookieContainer.Add(new Uri("https://www.kinopoisk.ru"), new Cookie("tc", "431"));
+                _cookieContainer.Add(new Uri("https://www.kinopoisk.ru"), new Cookie("user_country", "ru"));
+                _cookieContainer.Add(new Uri("https://www.kinopoisk.ru"), new Cookie("ya_sess_id", "noauth:1609169716"));
+                _cookieContainer.Add(new Uri("https://www.kinopoisk.ru"), new Cookie("yuidss", "6276612201542871157"));
+                _cookieContainer.Add(new Uri("https://www.kinopoisk.ru"), new Cookie("ys", "c_chck.2458526112"));
+            }
+
+            req.CookieContainer = _cookieContainer;
+
+            var resp = (HttpWebResponse)req.GetResponse();
+
+            StreamReader sr = new StreamReader(resp.GetResponseStream(), Encoding.GetEncoding("utf-8"));
+            return sr.ReadToEnd();
         }
 
         private static void UploadUrl(Uri url, string data)
@@ -87,7 +146,7 @@ namespace VideoLibrary
         }
 
         private const string pictureAddress = "https://www.kinopoisk.ru/images/film_big/";
-        private const string infoAddress = "https://plus.kinopoisk.ru/film/";
+        private const string infoAddress = "https://www.kinopoisk.ru/film/";
 
         public static string GetInfoAddress(int id)
         {
@@ -121,6 +180,8 @@ namespace VideoLibrary
 
             result.Id = id;
             string type;
+            if (IsCaptcha(doc))
+                throw new Exception("Капча");
             try
             {
                 type = GetType(doc);
@@ -142,7 +203,9 @@ namespace VideoLibrary
                     throw new Exception(htmlString);
                 }
             }
-            result.Name = GetTitle(doc, type);
+            string title = GetTitle(doc, type);
+            string origTitle = GetOriginalTitle(doc, type);
+            result.Name = (string.IsNullOrWhiteSpace(origTitle) || title == origTitle) ? title : title + " (" + origTitle + ")";
             result.Score = GetScore(doc, type);
             result.Year = GetYear(doc);
             result.Duration = GetDuration(doc);
@@ -156,10 +219,16 @@ namespace VideoLibrary
             return result;
         }
 
+        private static bool IsCaptcha(HtmlDocument doc)
+        {
+            string xpath = "//head/title";
+            HtmlNode typeNode = doc.DocumentNode.SelectSingleNode(xpath);
+            return (typeNode != null && typeNode.InnerText == "Ой!");                
+        }
+
         private static string GetType(HtmlDocument doc)
         {
-            string xpath = "//html//head";
-            xpath += "//meta[@property='og:type']";
+            string xpath = "//meta[@property='og:type']";
 
             HtmlNode typeNode = doc.DocumentNode.SelectSingleNode(xpath);
             if (typeNode != null)
@@ -179,58 +248,37 @@ namespace VideoLibrary
 
         private static string GetTitle(HtmlDocument doc, string type)
         {
-            string xpath = "//html//body";
-            xpath += "//div[@class='page-wrapper']";
-            xpath += "//div[@class='page-content page__content']";
-            xpath += "//div[@itemprop='mainEntityOfPage']";
-            xpath += "//div[@class='film-header film-header_type_" + type + " i-bem']";
-            xpath += "//div[@class='film-header__wrapper']";
-            xpath += "//div[@class='film-header__wrapper-row']";
+            string xpath = "//span[contains(@class, 'styles_title')]";
+            //HtmlNode titleNode = doc.DocumentNode.SelectSingleNode(xpath);
+            HtmlNodeCollection titleNodes = doc.DocumentNode.SelectNodes(xpath);
+            if (titleNodes.Count > 1 && !string.IsNullOrWhiteSpace(titleNodes[1].InnerText))
+                return titleNodes[1].InnerText;
+            else if (titleNodes.Count > 0)
+                return titleNodes[0].InnerText;
 
-            HtmlNodeCollection nodes = doc.DocumentNode.SelectNodes(xpath);
+            return "";
+        }
 
-            string xpath2 = "//header[@class='film-header__wrapper-head']";
-            xpath2 += "//div[@class='film-header__title' and @itemprop='name']";
-
-            foreach (HtmlNode node in nodes)
-            {
-                HtmlNode titleNode = node.SelectSingleNode(xpath2);
-                if (titleNode != null)
-                    return titleNode.InnerText;
-            }
+        private static string GetOriginalTitle(HtmlDocument doc, string type)
+        {
+            string xpath = "//span[contains(@class, 'styles_originalTitle')]";
+            HtmlNode titleNode = doc.DocumentNode.SelectSingleNode(xpath);
+            if (titleNode != null)
+                return titleNode.InnerText.Replace("&#x27;", "'"); 
 
             return "";
         }
 
         private static double GetScore(HtmlDocument doc, string type)
         {
-            string xpath = "//html//body";
-            xpath += "//div[@class='page-wrapper']";
-            xpath += "//div[@class='page-content page__content']";
-            xpath += "//div[@itemprop='mainEntityOfPage']";
-            xpath += "//div[@class='film-header film-header_type_" + type + " i-bem']";
-            xpath += "//div[@class='film-header__wrapper']";
-            xpath += "//div[@class='film-header__wrapper-row']";
+            string xpath = "//span[contains(@class,'film-rating-value')]";
 
-            HtmlNodeCollection nodes = doc.DocumentNode.SelectNodes(xpath);
-
-            string xpath2 = "//header[@class='film-header__wrapper-head']";
-            xpath2 += "//div[@class='film-header__rating-wrapper']";
-            xpath2 += "//div[@class='film-header__rating']";
-            xpath2 += "//div[@class='rating-button rating-button_size_l rating-button_rating_yes']";
-            xpath2 += "//div[contains(@class,'rating-button__left')]";
-            xpath2 += "//div[@class='rating-button__rating']";
-
-            foreach (HtmlNode node in nodes)
+            HtmlNode scoreNode = doc.DocumentNode.SelectSingleNode(xpath);
+            if (scoreNode != null)
             {
-                HtmlNode scoreNode = node.SelectSingleNode(xpath2);
-                if (scoreNode != null)
-                {
-                    double score;
-                    if (double.TryParse(scoreNode.InnerText, NumberStyles.Number, CultureInfo.InvariantCulture, out score))
-                        return score;
-                    break;
-                }
+                double score;
+                if (double.TryParse(scoreNode.InnerText, NumberStyles.Number, CultureInfo.InvariantCulture, out score))
+                    return score;
             }
 
             return 0;
@@ -238,46 +286,29 @@ namespace VideoLibrary
 
         private static string GetYear(HtmlDocument doc)
         {
-            string xpath = "//html//body";
-            xpath += "//div[@class='page-wrapper']";
-            xpath += "//div[@class='page-content page__content']";
-            xpath += "//div[@itemprop='mainEntityOfPage']";
-            xpath += "//div[@class='movie-wrapper i-bem']";
-            xpath += "//div[@class='col-left']";
-            xpath += "//div[@class='kinoisland i-bem']";
-            xpath += "//div[@class='kinoisland__content']";
-            xpath += "//table[@class='film-info film-info_mini film-info_main']";
-            xpath += "//tr[@class='film-info__row']";
+            string xpath = "//h3[contains(@class,'film-page-section-title')]";
 
-            HtmlNodeCollection nodes = doc.DocumentNode.SelectNodes(xpath);
-
-            string xpath2 = "//td[@class='film-info__type' and text()='Год производства']";
-            xpath2 += "//..//td[@class='film-info__value']";
-
-            foreach (HtmlNode node in nodes)
-            {
-                HtmlNode yearNode = node.SelectSingleNode(xpath2);
-                if (yearNode != null)
-                    return yearNode.InnerText.Replace("&thinsp;", "").Replace("&ndash;", "-");
-            }
-
+            HtmlNode yearNode = doc.DocumentNode.SelectSingleNode(xpath).NextSibling.FirstChild.LastChild;
+            if (yearNode != null)
+                return yearNode.InnerText.Replace("&thinsp;", "").Replace("&ndash;", "-");
+            
             return "";
         }
 
         private static int GetDuration(HtmlDocument doc)
         {
-            string xpath = "//html//body";
-            xpath += "//div[@class='page-wrapper']";
-            xpath += "//div[@class='page-content page__content']";
-            xpath += "//div[@itemprop='mainEntityOfPage']";
-            xpath += "//div[@class='movie-wrapper i-bem']";
-            xpath += "//div[@class='col-left']";
-            xpath += "//div[@class='kinoisland i-bem']";
-            xpath += "//div[@class='kinoisland__content']";
-            xpath += "//table[@class='film-info film-info_mini film-info_main']";
-            xpath += "//tr[@class='film-info__row']";
+            string xpath = "//h3[contains(@class,'film-page-section-title')]";
 
-            HtmlNodeCollection nodes = doc.DocumentNode.SelectNodes(xpath);
+            HtmlNode durationNode = doc.DocumentNode.SelectSingleNode(xpath).NextSibling.LastChild.LastChild;
+
+            if (durationNode != null)
+            {
+                int parsed;
+                if (int.TryParse(durationNode.InnerText.Split(' ')[0], out parsed)) // продолжительность должна быть до первого пробела
+                    return parsed;
+            }
+
+            /*HtmlNodeCollection nodes = doc.DocumentNode.SelectNodes(xpath);
 
             string xpath2 = "//td[@class='film-info__type' and text()='Время']";
             xpath2 += "//..//td[@class='film-info__value']";
@@ -311,21 +342,14 @@ namespace VideoLibrary
 
                     return hours * 60 + minutes;
                 }
-            }
+            }*/
 
             return 0;
         }
 
         private static string GetSynopsis(HtmlDocument doc)
         {
-            string xpath = "//html//body";
-            xpath += "//div[@class='page-wrapper']";
-            xpath += "//div[@class='page-content page__content']";
-            xpath += "//div[@itemprop='mainEntityOfPage']";
-            xpath += "//div[@class='movie-wrapper i-bem']";
-            xpath += "//div[@class='col-content']";
-            xpath += "//div[@class='kinoisland kinoisland_movie-description film-description i-bem']";
-            xpath += "//div[@class='kinoisland__content' and @itemprop='description']";
+            string xpath = "//p[contains(@class,'styles_paragraph')]";
 
             HtmlNode synopsisNode = doc.DocumentNode.SelectSingleNode(xpath);
             if (synopsisNode != null)
