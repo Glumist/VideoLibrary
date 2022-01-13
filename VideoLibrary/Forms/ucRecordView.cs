@@ -60,6 +60,10 @@ namespace VideoLibrary
 
             tsbPlay.Enabled = record.CanPlay;
             tsbBrowse.Enabled = record.CanBrowse;
+
+            tssSeason.Visible = (record.Type == VideoType.Series || record.Type == VideoType.MiniSeries);
+            tsbStartSeason.Visible = (record.Type == VideoType.Series || record.Type == VideoType.MiniSeries) && !record.DateStart.HasValue;
+            tsbNextSeason.Visible = (record.Type == VideoType.Series || record.Type == VideoType.MiniSeries);
         }
 
         public void UpdateTags()
@@ -119,7 +123,49 @@ namespace VideoLibrary
 
         private void tsbRemove_Click(object sender, EventArgs e)
         {
+            FormDates form = new FormDates(_record.DateStart, _record.DateEnd, false);
+            if (form.ShowDialog() != DialogResult.OK)
+                return;
+            _record.DateStart = form.DateStart;
+            _record.DateEnd = form.DateEnd;
             _record.Existence = Existence.Had;
+            if (_record.Type == VideoType.Series || _record.Type == VideoType.MiniSeries)
+                if (!_record.SeasonDates.Exists(s => s.Season == _record.Season))
+                    _record.SeasonDates.Add(new SeasonDates()
+                    {
+                        Season = _record.Season,
+                        DateStart = _record.DateStart,
+                        DateEnd = _record.DateEnd
+                    });
+
+            OnVideoRecordSaved(_record);
+        }
+
+        private void tsbStartSeason_Click(object sender, EventArgs e)
+        {
+            _record.DateStart = DateTime.Today;
+
+            OnVideoRecordSaved(_record);
+        }
+
+        private void tsbNextSeason_Click(object sender, EventArgs e)
+        {
+            FormDates form = new FormDates(_record.DateStart, _record.DateEnd, true);
+            if (form.ShowDialog() != DialogResult.OK)
+                return;
+
+            _record.Existence = form.Existence;
+            _record.DateStart = form.DateStart;
+            _record.DateEnd = form.DateEnd;
+            if (!_record.SeasonDates.Exists(s => s.Season == _record.Season))
+                VideoRecord.AddSeasonDates(_record.SeasonDates, new SeasonDates()
+                {
+                    Season = _record.Season,
+                    DateStart = form.DateStart,
+                    DateEnd = form.DateEnd
+                });
+            _record.Season++;
+
             OnVideoRecordSaved(_record);
         }
 

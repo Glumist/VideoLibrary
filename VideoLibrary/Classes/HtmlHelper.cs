@@ -156,6 +156,22 @@ namespace VideoLibrary
         public static void SaveVideoPicture(int id)
         {
             string address = pictureAddress + id + ".jpg";
+            SaveVideoPicture(id, address);
+
+            /*string path = GetPicDirectory();
+            string fileName = GetFilename(id);
+            if (!Directory.Exists(path))
+                Directory.CreateDirectory(path);
+            //if (!File.Exists(fileName))
+            using (WebClient client = new WebClient())
+            {
+                client.DownloadFile(address, GetFilename(id));
+            }*/
+        }
+
+        public static void SaveVideoPicture(int id, string address)
+        {
+            //string address = pictureAddress + id + ".jpg";
 
             string path = GetPicDirectory();
             string fileName = GetFilename(id);

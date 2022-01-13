@@ -10,12 +10,14 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using VideoLibrary.Properties;
 
 namespace VideoLibrary
 {
     public partial class ucRecordEdit : UserControl
     {
         public VideoRecord EditedRecord;
+        private List<SeasonDates> _seasonDates;
 
         public ucRecordEdit()
         {
@@ -33,6 +35,8 @@ namespace VideoLibrary
                 nudId.Focus();
                 return;
             }
+            else
+                tbName.Focus();
 
             EditedRecord = record;
 
@@ -46,6 +50,15 @@ namespace VideoLibrary
             nudScore.Value = (decimal)record.Score;
             tbSynopsis.Text = record.Synopsis;
             chbHdr.Checked = record.IsHdr;
+            dtpDateStart.Value = record.DateStart.HasValue ? record.DateStart.Value : DateTime.Today;
+            dtpDateStart.Checked = record.DateStart.HasValue;
+            dtpDateEnd.Value = record.DateEnd.HasValue ? record.DateEnd.Value : DateTime.Today;
+            dtpDateEnd.Checked = record.DateEnd.HasValue;
+            nudSeason.Value = record.Season;
+
+            _seasonDates = new List<SeasonDates>();
+            record.SeasonDates.ForEach(s => _seasonDates.Add(new SeasonDates() { Season = s.Season, DateStart = s.DateStart, DateEnd = s.DateEnd }));
+            dgvSeasonDates.DataSource = new List<SeasonDates>(_seasonDates);
 
             switch (record.Type)
             {
@@ -84,6 +97,9 @@ namespace VideoLibrary
 
             pbSubs.Image = record.SubLanguagesPic;
             pbSubs.Tag = new List<Language>(record.SubLanguages);
+
+            btGetFromInternet.Image = Resources.IconInternet;
+            btGetFromInternetByAddress.Image = Resources.IconDownload;
         }
 
         public void UpdateLanguages()
@@ -143,6 +159,9 @@ namespace VideoLibrary
             EditedRecord.Comment = tbComment.Text;
             EditedRecord.Path = tbPath.Text;
             EditedRecord.IsHdr = chbHdr.Checked;
+            EditedRecord.DateStart = dtpDateStart.Checked ? (DateTime?)dtpDateStart.Value.Date : null;
+            EditedRecord.DateEnd = dtpDateEnd.Checked ? (DateTime?)dtpDateEnd.Value.Date : null;
+            EditedRecord.Season = (int)nudSeason.Value;
 
             if (rbSd.Checked)
                 EditedRecord.Resolution = Resolution.SD;
@@ -156,10 +175,23 @@ namespace VideoLibrary
             EditedRecord.SoundLanguages = (List<Language>)pbSound.Tag;
             EditedRecord.SubLanguages = (List<Language>)pbSubs.Tag;
 
+            EditedRecord.SeasonDates = new List<SeasonDates>();
+            _seasonDates.ForEach(s => EditedRecord.SeasonDates.Add(new SeasonDates()
+            {
+                Season = s.Season,
+                DateStart = s.DateStart,
+                DateEnd = s.DateEnd
+            }));
+
             if (isNew)
                 OnVideoRecordAdded(EditedRecord);
             else
                 OnVideoRecordSaved(EditedRecord);
+        }
+
+        private void nudId_Enter(object sender, EventArgs e)
+        {
+            nudId.Select(0, nudId.Value.ToString().Length);
         }
 
         private void btGetFromInternet_Click(object sender, EventArgs e)
@@ -168,11 +200,68 @@ namespace VideoLibrary
             if (id <= 0)
                 return;
 
-            if (VideoDataCollection.GetInstance().VideoList.Exists(v => v.Id == id))
+            if (EditedRecord == null && VideoDataCollection.GetInstance().VideoList.Exists(v => v.Id == id))
                 if (MessageBox.Show("Запись с указанным Id уже существует. Продолжить?", "Дубликат", MessageBoxButtons.YesNo) != DialogResult.Yes)
                     return;
 
-            HtmlHelper.SaveVideoPicture(id);
+            try
+            {
+                HtmlHelper.SaveVideoPicture(id);
+                btGetFromInternet.Image = Resources.IconApply;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void btGetFromInternetByAddress_Click(object sender, EventArgs e)
+        {
+            int id = (int)nudId.Value;
+            if (id <= 0)
+                return;
+
+            FormString form = new FormString("Введите URL картинки");
+            if (form.ShowDialog() != DialogResult.OK)
+                return;
+
+            if (string.IsNullOrWhiteSpace(form.EditedText))
+                return;
+
+            try
+            {
+                HtmlHelper.SaveVideoPicture(id, form.EditedText);
+                btGetFromInternetByAddress.Image = Resources.IconApply;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void cbType_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            splitContainer1.Panel1Collapsed = !(cbType.SelectedIndex == 2 || cbType.SelectedIndex == 3);
+        }
+
+        private void btAddSeason_Click(object sender, EventArgs e)
+        {
+            SeasonDates found = _seasonDates.Find(sd => sd.Season == (int)nudSeason.Value);
+            if (found != null)
+            {
+                found.DateStart = dtpDateStart.Checked ? (DateTime?)dtpDateStart.Value.Date : null;
+                found.DateEnd = dtpDateEnd.Checked ? (DateTime?)dtpDateEnd.Value.Date : null;
+            }
+            else
+            {
+                VideoRecord.AddSeasonDates(_seasonDates, new SeasonDates()
+                {
+                    Season = (int)nudSeason.Value,
+                    DateStart = dtpDateStart.Checked ? (DateTime?)dtpDateStart.Value.Date : null,
+                    DateEnd = dtpDateEnd.Checked ? (DateTime?)dtpDateEnd.Value.Date : null
+                });
+                dgvSeasonDates.DataSource = new List<SeasonDates>(_seasonDates);
+            }
         }
 
         private void btBrowse_Click(object sender, EventArgs e)

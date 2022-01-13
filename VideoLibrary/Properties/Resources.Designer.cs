@@ -63,9 +63,29 @@ namespace VideoLibrary.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap action_delete_sharp_thick {
+            get {
+                object obj = ResourceManager.GetObject("action-delete-sharp-thick", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap add_icon {
             get {
                 object obj = ResourceManager.GetObject("add_icon", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap IconApply {
+            get {
+                object obj = ResourceManager.GetObject("IconApply", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -86,6 +106,26 @@ namespace VideoLibrary.Properties {
         internal static System.Drawing.Bitmap IconBrowse {
             get {
                 object obj = ResourceManager.GetObject("IconBrowse", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap IconClear {
+            get {
+                object obj = ResourceManager.GetObject("IconClear", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap IconDownload {
+            get {
+                object obj = ResourceManager.GetObject("IconDownload", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -246,6 +286,16 @@ namespace VideoLibrary.Properties {
         internal static System.Drawing.Bitmap IconUHD {
             get {
                 object obj = ResourceManager.GetObject("IconUHD", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap IconUpload {
+            get {
+                object obj = ResourceManager.GetObject("IconUpload", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

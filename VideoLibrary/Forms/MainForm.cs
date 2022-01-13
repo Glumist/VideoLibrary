@@ -7,6 +7,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using VideoLibrary.Properties;
@@ -18,13 +19,15 @@ namespace VideoLibrary
         VideoDataCollection _videoCollection = new VideoDataCollection();
         List<VideoTag> _tagFilter = new List<VideoTag>();
         string wantText = "";
-        bool picsLoaded = false;
+        Dictionary<Existence, bool> loadedPics;
         //public static string log = "";
 
         BackgroundWorker bgwImagesLoader;
 
         public MainForm()
         {
+            loadedPics = new Dictionary<Existence, bool>();
+
             InitializeComponent();
 
             //MessageBox.Show("");
@@ -34,7 +37,7 @@ namespace VideoLibrary
             tscbSort.SelectedIndex = 0;
             tscbTypeFilter.SelectedIndex = 0;
             tscbExistence.SelectedIndex = 0;
-            tscbView.SelectedIndex = 0;
+            tscbView.SelectedIndex = 1;
 
             tscbSort.SelectedIndexChanged += tscb_SelectedIndexChanged;
             tscbTypeFilter.SelectedIndexChanged += tscb_SelectedIndexChanged;
@@ -50,8 +53,29 @@ namespace VideoLibrary
 
         private void BgwImagesLoader_DoWork(object sender, DoWorkEventArgs e)
         {
-            RefreshImages(true);
+            Thread.Sleep(1000);
+            RefreshImages((Existence)e.Argument);
+            e.Result = e.Argument;
         }
+
+        private void BgwImagesLoader_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            if (e.Cancelled)
+                return;
+
+            Existence existence = (Existence)e.Result;
+            if (!loadedPics[existence])
+            {
+                lvVideo.LargeImageList = ilVideo;
+                RefreshListView();
+            }
+            //log += "list view refreshed " + string.Format("{0:mm:ss.ffff}", DateTime.Now) + Environment.NewLine;
+
+            if (!loadedPics[existence])
+                loadedPics[existence] = true;
+        }
+
+        #region Events
 
         private void MainForm_Load(object sender, EventArgs e)
         {
@@ -61,21 +85,21 @@ namespace VideoLibrary
             }
             catch { }
             _videoCollection = VideoDataCollection.Load();
-            RefreshLists(false);
 
             bgwImagesLoader = new BackgroundWorker();
             bgwImagesLoader.DoWork += BgwImagesLoader_DoWork;
-            bgwImagesLoader.RunWorkerAsync();
+            bgwImagesLoader.RunWorkerCompleted += BgwImagesLoader_RunWorkerCompleted;
+            bgwImagesLoader.WorkerSupportsCancellation = true;
+            //bgwImagesLoader.RunWorkerAsync(Existence.Have);
+            RefreshLists();
         }
 
         private void MainForm_FormClosed(object sender, FormClosedEventArgs e)
         {
-            List<string> ids = new List<string>();
+            /*List<string> ids = new List<string>();
             _videoCollection.VideoList.FindAll(vl => vl.Existence == Existence.Had).ForEach(dr => ids.Add(dr.Id.ToString()));
-            FileHelper.DeleteImages(ids);
+            FileHelper.DeleteImages(ids);*/
         }
-
-        #region Events
 
         private void RecordView_VideoRecordEditClicked(object sender, VideoRecord e)
         {
@@ -118,11 +142,35 @@ namespace VideoLibrary
         {
             RefreshTable();
             if (withImages)
-                RefreshImages();
+            {
+                Existence existence = GetSelectedExistence();
+                if (!loadedPics.ContainsKey(existence))
+                {
+                    if (bgwImagesLoader.IsBusy)
+                    {
+                        bgwImagesLoader.CancelAsync();
+                        Thread.Sleep(1000);
+                    }
+                    if (!bgwImagesLoader.IsBusy)
+                        bgwImagesLoader.RunWorkerAsync(existence);
+                }
+            }
             RefreshListView();
             RefreshStat();
             RefreshTags();
             ucRecordEdit.UpdateLanguages();
+        }
+
+        private Existence GetSelectedExistence()
+        {
+            switch (tscbExistence.SelectedIndex)
+            {
+                case 0: return Existence.Have;
+                case 1: return Existence.WillHave; 
+                case 2: return Existence.Had; 
+                case 3: return Existence.Collection; 
+                default: return Existence.Unknown; 
+            }
         }
 
         private List<VideoRecord> GetFilteredSortedList()
@@ -174,6 +222,8 @@ namespace VideoLibrary
                 filtered.Sort(VideoRecord.CompareBySize);
             else if (tscbSort.SelectedIndex == 6)
                 filtered.Sort(VideoRecord.CompareByQuality);
+            else if (tscbSort.SelectedIndex == 7)
+                filtered.Sort(VideoRecord.CompareByDateEnd);
 
             return filtered;
         }
@@ -211,34 +261,48 @@ namespace VideoLibrary
             lvVideo.EndUpdate();
         }
 
-        private void RefreshImages(bool init = false)
+        private void RefreshImages(Existence existence)
         {
-            if (!init && !picsLoaded)
+            if (!loadedPics.ContainsKey(existence))
+                loadedPics.Add(existence, false);
+            else if (!loadedPics[existence])
                 return;
 
-            List<string> currentIds = new List<string>();
-            foreach (string id in ilVideo.Images.Keys)
-                currentIds.Add(id);
+            List<int> currentIds = _videoCollection.VideoList.FindAll(v => v.Existence == existence).Select(v => v.Id).ToList();//new List<string>();
+            /*foreach (string id in ilVideo.Images.Keys)
+            {
+                if (bgwImagesLoader.CancellationPending)
+                {
+                    if (!loadedPics[existence])
+                        loadedPics.Remove(existence);
+                    return;
+                }
+                VideoRecord record = _videoCollection.VideoList.Find(v => v.Id.ToString() == id);
+                if (record != null && record.Existence == existence)
+                    currentIds.Add(id);
+            }*/
 
             //log += "start loading pics " + string.Format("{0:mm:ss.ffff}", DateTime.Now) + Environment.NewLine;
-            Dictionary<string, Image> pics = FileHelper.GetAllPics(currentIds, ilVideo.ImageSize.Height);
+            //Dictionary<string, Image> pics = FileHelper.GetAllPics(currentIds, ilVideo.ImageSize.Height);
             //log += "end loading pics " + string.Format("{0:mm:ss.ffff}", DateTime.Now) + Environment.NewLine;
-            foreach (string id in pics.Keys)
+            foreach (int id in currentIds)
             {
-                Image complexImage = PicHelper.MakeComplexRecordImage(pics[id], _videoCollection.VideoList.Find(v => v.Id.ToString() == id));
-                ilVideo.Images.Add(id, complexImage);
+                if (bgwImagesLoader.CancellationPending)
+                {
+                    if (!loadedPics[existence])
+                        loadedPics.Remove(existence);
+                    return;
+                }
+                Image image = FileHelper.GetImage(id, ilVideo.ImageSize.Height);
+                if (image == null)
+                {
+                    //ilVideo.Images.Add("" + id, VideoRecord.ClearImage);
+                    continue;
+                }
+                Image complexImage = PicHelper.MakeComplexRecordImage(image, _videoCollection.VideoList.Find(v => v.Id == id));
+                ilVideo.Images.Add("" + id, complexImage);
             }
             //log += "refresh list view " + string.Format("{0:mm:ss.ffff}", DateTime.Now) + Environment.NewLine;
-
-            if (init)
-            {
-                lvVideo.LargeImageList =  ilVideo;
-                RefreshListView();
-            }
-            //log += "list view refreshed " + string.Format("{0:mm:ss.ffff}", DateTime.Now) + Environment.NewLine;
-
-            if (!picsLoaded)
-                picsLoaded = true;
         }
 
         private void RefreshImage(int id)
@@ -562,6 +626,21 @@ namespace VideoLibrary
                 lvVideo.BringToFront();
 
             RefreshInfo();
+        }
+
+        private void tsmiClearImages_Click(object sender, EventArgs e)
+        {
+            Existence currentExistence = GetSelectedExistence();
+            List<string> currentIds = new List<string>();
+            foreach (string id in ilVideo.Images.Keys)
+            {
+                VideoRecord record = _videoCollection.VideoList.Find(v => v.Id.ToString() == id);
+                if (record != null && record.Existence == currentExistence)
+                    currentIds.Add(id);
+            }
+
+            currentIds.ForEach(idStr => ilVideo.Images.RemoveByKey(idStr));
+            loadedPics.Remove(currentExistence);
         }
 
         #endregion

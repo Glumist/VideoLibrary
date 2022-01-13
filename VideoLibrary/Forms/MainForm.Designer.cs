@@ -56,19 +56,20 @@
             this.msVideo = new System.Windows.Forms.MenuStrip();
             this.tscbSort = new System.Windows.Forms.ToolStripComboBox();
             this.tscbTypeFilter = new System.Windows.Forms.ToolStripComboBox();
-            this.tsmiTagsFilter = new System.Windows.Forms.ToolStripMenuItem();
             this.tscbView = new System.Windows.Forms.ToolStripComboBox();
             this.tscbExistence = new System.Windows.Forms.ToolStripComboBox();
-            this.recordView = new VideoLibrary.ucRecordView();
             this.pClear = new System.Windows.Forms.Panel();
-            this.ucRecordEdit = new VideoLibrary.ucRecordEdit();
             this.ilVideo = new System.Windows.Forms.ImageList(this.components);
             this.msMain = new System.Windows.Forms.MenuStrip();
-            this.tsmiAdd = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmiWant = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmiTest = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmiTags = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmiLanguages = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsmiTagsFilter = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsmiClearImages = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsmiAdd = new System.Windows.Forms.ToolStripMenuItem();
+            this.recordView = new VideoLibrary.ucRecordView();
+            this.ucRecordEdit = new VideoLibrary.ucRecordEdit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvVideo)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.scMain)).BeginInit();
             this.scMain.Panel1.SuspendLayout();
@@ -238,8 +239,8 @@
             // 
             // scMain.Panel1
             // 
-            this.scMain.Panel1.Controls.Add(this.dgvVideo);
             this.scMain.Panel1.Controls.Add(this.lvVideo);
+            this.scMain.Panel1.Controls.Add(this.dgvVideo);
             this.scMain.Panel1.Controls.Add(this.ssVideo);
             this.scMain.Panel1.Controls.Add(this.msVideo);
             // 
@@ -288,7 +289,8 @@
             this.tscbTypeFilter,
             this.tsmiTagsFilter,
             this.tscbView,
-            this.tscbExistence});
+            this.tscbExistence,
+            this.tsmiClearImages});
             this.msVideo.Location = new System.Drawing.Point(0, 0);
             this.msVideo.Name = "msVideo";
             this.msVideo.Padding = new System.Windows.Forms.Padding(9, 3, 0, 3);
@@ -306,7 +308,8 @@
             "По хронометражу",
             "По году выхода",
             "По размеру",
-            "По качеству"});
+            "По качеству",
+            "По дате просмотра"});
             this.tscbSort.Name = "tscbSort";
             this.tscbSort.Size = new System.Drawing.Size(193, 33);
             // 
@@ -322,16 +325,6 @@
             "МиниСериалы"});
             this.tscbTypeFilter.Name = "tscbTypeFilter";
             this.tscbTypeFilter.Size = new System.Drawing.Size(180, 33);
-            // 
-            // tsmiTagsFilter
-            // 
-            this.tsmiTagsFilter.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.tsmiTagsFilter.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tsmiTagsFilter.Image = global::VideoLibrary.Properties.Resources.IconFilter;
-            this.tsmiTagsFilter.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.tsmiTagsFilter.Name = "tsmiTagsFilter";
-            this.tsmiTagsFilter.Size = new System.Drawing.Size(28, 33);
-            this.tsmiTagsFilter.Text = "Фильтр";
             // 
             // tscbView
             // 
@@ -354,16 +347,6 @@
             this.tscbExistence.Name = "tscbExistence";
             this.tscbExistence.Size = new System.Drawing.Size(180, 33);
             // 
-            // recordView
-            // 
-            this.recordView.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.recordView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.recordView.Location = new System.Drawing.Point(0, 0);
-            this.recordView.Margin = new System.Windows.Forms.Padding(6, 8, 6, 8);
-            this.recordView.Name = "recordView";
-            this.recordView.Size = new System.Drawing.Size(508, 1240);
-            this.recordView.TabIndex = 0;
-            // 
             // pClear
             // 
             this.pClear.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -372,14 +355,6 @@
             this.pClear.Name = "pClear";
             this.pClear.Size = new System.Drawing.Size(508, 1240);
             this.pClear.TabIndex = 1;
-            // 
-            // ucRecordEdit
-            // 
-            this.ucRecordEdit.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ucRecordEdit.Location = new System.Drawing.Point(0, 0);
-            this.ucRecordEdit.Name = "ucRecordEdit";
-            this.ucRecordEdit.Size = new System.Drawing.Size(508, 1240);
-            this.ucRecordEdit.TabIndex = 4;
             // 
             // ilVideo
             // 
@@ -402,14 +377,6 @@
             this.msMain.Size = new System.Drawing.Size(2129, 35);
             this.msMain.TabIndex = 2;
             this.msMain.Text = "menuStrip1";
-            // 
-            // tsmiAdd
-            // 
-            this.tsmiAdd.Image = global::VideoLibrary.Properties.Resources.add_icon;
-            this.tsmiAdd.Name = "tsmiAdd";
-            this.tsmiAdd.Size = new System.Drawing.Size(126, 29);
-            this.tsmiAdd.Text = "Добавить";
-            this.tsmiAdd.Click += new System.EventHandler(this.tsmiAdd_Click);
             // 
             // tsmiWant
             // 
@@ -441,6 +408,49 @@
             this.tsmiLanguages.Size = new System.Drawing.Size(75, 29);
             this.tsmiLanguages.Text = "Языки";
             this.tsmiLanguages.Click += new System.EventHandler(this.tsmiLanguages_Click);
+            // 
+            // tsmiTagsFilter
+            // 
+            this.tsmiTagsFilter.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.tsmiTagsFilter.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tsmiTagsFilter.Image = global::VideoLibrary.Properties.Resources.IconFilter;
+            this.tsmiTagsFilter.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.tsmiTagsFilter.Name = "tsmiTagsFilter";
+            this.tsmiTagsFilter.Size = new System.Drawing.Size(28, 33);
+            this.tsmiTagsFilter.Text = "Фильтр";
+            // 
+            // tsmiClearImages
+            // 
+            this.tsmiClearImages.Image = global::VideoLibrary.Properties.Resources.IconClear;
+            this.tsmiClearImages.Name = "tsmiClearImages";
+            this.tsmiClearImages.Size = new System.Drawing.Size(36, 33);
+            this.tsmiClearImages.Click += new System.EventHandler(this.tsmiClearImages_Click);
+            // 
+            // tsmiAdd
+            // 
+            this.tsmiAdd.Image = global::VideoLibrary.Properties.Resources.add_icon;
+            this.tsmiAdd.Name = "tsmiAdd";
+            this.tsmiAdd.Size = new System.Drawing.Size(126, 29);
+            this.tsmiAdd.Text = "Добавить";
+            this.tsmiAdd.Click += new System.EventHandler(this.tsmiAdd_Click);
+            // 
+            // recordView
+            // 
+            this.recordView.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.recordView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.recordView.Location = new System.Drawing.Point(0, 0);
+            this.recordView.Margin = new System.Windows.Forms.Padding(6, 8, 6, 8);
+            this.recordView.Name = "recordView";
+            this.recordView.Size = new System.Drawing.Size(508, 1240);
+            this.recordView.TabIndex = 0;
+            // 
+            // ucRecordEdit
+            // 
+            this.ucRecordEdit.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ucRecordEdit.Location = new System.Drawing.Point(0, 0);
+            this.ucRecordEdit.Name = "ucRecordEdit";
+            this.ucRecordEdit.Size = new System.Drawing.Size(508, 1240);
+            this.ucRecordEdit.TabIndex = 4;
             // 
             // MainForm
             // 
@@ -504,6 +514,7 @@
         private System.Windows.Forms.DataGridViewImageColumn colHdr;
         private System.Windows.Forms.DataGridViewTextBoxColumn colSize;
         private ucRecordEdit ucRecordEdit;
+        private System.Windows.Forms.ToolStripMenuItem tsmiClearImages;
     }
 }
 

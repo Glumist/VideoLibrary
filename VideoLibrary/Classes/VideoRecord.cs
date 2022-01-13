@@ -137,6 +137,38 @@ namespace VideoLibrary
             get { return VideoTag.GetTagsPic(Tags); }
         }
 
+        private DateTime? _dateStart;
+        public DateTime? DateStart
+        {
+            get { return _dateStart; }
+            set { _dateStart = value; }
+        }
+
+        private DateTime? _dateEnd;
+        public DateTime? DateEnd
+        {
+            get { return _dateEnd; }
+            set { _dateEnd = value; }
+        }
+
+        #endregion
+
+        #region Series
+
+        private int _season = 1;
+        public int Season
+        {
+            get { return _season; }
+            set { _season = value; }
+        }
+
+        private List<SeasonDates> _seasonDates;
+        public List<SeasonDates> SeasonDates
+        {
+            get { return _seasonDates; }
+            set { _seasonDates = value; }
+        }
+
         #endregion
 
         #region File
@@ -325,7 +357,7 @@ namespace VideoLibrary
         [XmlIgnore]
         public Image SubLanguagesPic
         {
-            get { return Language.GetLanguagesPic(SubLanguages); }
+            get { try { return Language.GetLanguagesPic(SubLanguages); } catch { return ClearImage; } }
         }
 
         List<Language> _soundLanguages;
@@ -366,6 +398,7 @@ namespace VideoLibrary
             Tags = new List<VideoTag>();
             SubLanguages = new List<Language>();
             SoundLanguages = new List<Language>();
+            SeasonDates = new List<SeasonDates>();
         }
 
         public override string ToString()
@@ -386,6 +419,12 @@ namespace VideoLibrary
             if (!attr.HasValue)
                 return false;
             return !attr.Value.HasFlag(FileAttributes.Directory) && File.Exists(path);
+        }
+
+        public static void AddSeasonDates(List<SeasonDates> seasonDates, SeasonDates newSeasonDates)
+        {
+            seasonDates.Add(newSeasonDates);
+            seasonDates.Sort(VideoLibrary.SeasonDates.CompareBySeason);
         }
 
         #region Convert
@@ -548,6 +587,17 @@ namespace VideoLibrary
                 return 1;
         }
 
+        public static int CompareByDateEnd(VideoRecord a, VideoRecord b)
+        {
+            if (a.DateEnd == b.DateEnd)
+                return string.Compare(a.Name, b.Name);
+            else if (a.DateEnd.HasValue && !b.DateEnd.HasValue)
+                return -1;
+            else if (!a.DateEnd.HasValue && b.DateEnd.HasValue)
+                return 1;
+            return DateTime.Compare(b.DateEnd.Value, a.DateEnd.Value);
+        }
+
         #endregion
     }
 
@@ -645,5 +695,47 @@ namespace VideoLibrary
         HD = 720,
         FHD = 1080,
         UHD = 2160
+    }
+
+    public class SeasonDates
+    {
+        private int _season = 1;
+        public int Season
+        {
+            get { return _season; }
+            set { _season = value; }
+        }
+
+        private DateTime? _dateStart;
+        public DateTime? DateStart
+        {
+            get { return _dateStart; }
+            set { _dateStart = value; }
+        }
+
+        private DateTime? _dateEnd;
+        public DateTime? DateEnd
+        {
+            get { return _dateEnd; }
+            set { _dateEnd = value; }
+        }
+
+        public static int CompareByDateEnd(SeasonDates a, SeasonDates b)
+        {
+            if (a.DateEnd == b.DateEnd)
+                return 0;
+            else if (a.DateEnd.HasValue && !b.DateEnd.HasValue)
+                return -1;
+            else if (!a.DateEnd.HasValue && b.DateEnd.HasValue)
+                return 1;
+            return DateTime.Compare(b.DateEnd.Value, a.DateEnd.Value);
+        }
+
+        public static int CompareBySeason(SeasonDates a, SeasonDates b)
+        {
+            if (a.Season == b.Season)
+                return CompareByDateEnd(a, b);
+            return (int)((b.Season - a.Season) * 100);
+        }
     }
 }

@@ -121,8 +121,8 @@
   <data name="IconFHD" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\IconFHD.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="IconUHD" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\IconUHD.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="add_icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\add-icon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="IconTrash" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\iconTrash.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -130,8 +130,11 @@
   <data name="IconHD" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\IconHD.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="add_icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\add-icon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="IconDownload" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\IconDownload.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconQuestion" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\IconQuestion.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="IconInternet" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\IconInternet.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -142,14 +145,11 @@
   <data name="IconHDR" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\IconHDR.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="IconQuestion" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\IconQuestion.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="IconFlag" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\IconFlag.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="IconFilter" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\IconFilter.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="IconFlag" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\IconFlag.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="IconPlay" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\IconPlay.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -169,10 +169,25 @@
   <data name="IconSD" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\IconSD.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="IconBoth" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\IconBoth.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="IconUHD" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\IconUHD.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconClear" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\IconClear.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="action-delete-sharp-thick" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\action-delete-sharp-thick.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="IconSave" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\IconSave.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconBoth" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\IconBoth.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconUpload" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\IconUpload.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconApply" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\IconApply.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

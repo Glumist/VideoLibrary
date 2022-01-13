@@ -31,10 +31,10 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ucRecordView));
             this.tbName = new System.Windows.Forms.TextBox();
             this.scMain = new System.Windows.Forms.SplitContainer();
-            this.pbImage = new System.Windows.Forms.PictureBox();
             this.tbSynopsis = new System.Windows.Forms.TextBox();
             this.tbComment = new System.Windows.Forms.TextBox();
             this.tsVideoInfo = new System.Windows.Forms.ToolStrip();
+            this.pbImage = new System.Windows.Forms.PictureBox();
             this.tsbEdit = new System.Windows.Forms.ToolStripButton();
             this.tsddbTags = new System.Windows.Forms.ToolStripDropDownButton();
             this.tsddbUserScore = new System.Windows.Forms.ToolStripDropDownButton();
@@ -48,12 +48,15 @@
             this.tsbBrowse = new System.Windows.Forms.ToolStripButton();
             this.tsbPlay = new System.Windows.Forms.ToolStripButton();
             this.tsbRemove = new System.Windows.Forms.ToolStripButton();
+            this.tsbNextSeason = new System.Windows.Forms.ToolStripButton();
+            this.tssSeason = new System.Windows.Forms.ToolStripSeparator();
+            this.tsbStartSeason = new System.Windows.Forms.ToolStripButton();
             ((System.ComponentModel.ISupportInitialize)(this.scMain)).BeginInit();
             this.scMain.Panel1.SuspendLayout();
             this.scMain.Panel2.SuspendLayout();
             this.scMain.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pbImage)).BeginInit();
             this.tsVideoInfo.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pbImage)).BeginInit();
             this.SuspendLayout();
             // 
             // tbName
@@ -92,17 +95,6 @@
             this.scMain.SplitterDistance = 370;
             this.scMain.SplitterWidth = 6;
             this.scMain.TabIndex = 22;
-            // 
-            // pbImage
-            // 
-            this.pbImage.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pbImage.Location = new System.Drawing.Point(0, 0);
-            this.pbImage.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.pbImage.Name = "pbImage";
-            this.pbImage.Size = new System.Drawing.Size(1408, 370);
-            this.pbImage.TabIndex = 1;
-            this.pbImage.TabStop = false;
-            this.pbImage.Click += new System.EventHandler(this.pbImage_Click);
             // 
             // tbSynopsis
             // 
@@ -144,13 +136,27 @@
             this.tsbOpenInBrowser,
             this.tsbBrowse,
             this.tsbPlay,
-            this.tsbRemove});
+            this.tsbRemove,
+            this.tssSeason,
+            this.tsbStartSeason,
+            this.tsbNextSeason});
             this.tsVideoInfo.Location = new System.Drawing.Point(0, 0);
             this.tsVideoInfo.Name = "tsVideoInfo";
             this.tsVideoInfo.Padding = new System.Windows.Forms.Padding(0, 0, 2, 0);
             this.tsVideoInfo.Size = new System.Drawing.Size(1418, 32);
             this.tsVideoInfo.TabIndex = 24;
             this.tsVideoInfo.Text = "toolStrip1";
+            // 
+            // pbImage
+            // 
+            this.pbImage.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pbImage.Location = new System.Drawing.Point(0, 0);
+            this.pbImage.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.pbImage.Name = "pbImage";
+            this.pbImage.Size = new System.Drawing.Size(1408, 370);
+            this.pbImage.TabIndex = 1;
+            this.pbImage.TabStop = false;
+            this.pbImage.Click += new System.EventHandler(this.pbImage_Click);
             // 
             // tsbEdit
             // 
@@ -275,6 +281,29 @@
             this.tsbRemove.Size = new System.Drawing.Size(28, 29);
             this.tsbRemove.Click += new System.EventHandler(this.tsbRemove_Click);
             // 
+            // tsbNextSeason
+            // 
+            this.tsbNextSeason.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tsbNextSeason.Image = global::VideoLibrary.Properties.Resources.IconUpload;
+            this.tsbNextSeason.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbNextSeason.Name = "tsbNextSeason";
+            this.tsbNextSeason.Size = new System.Drawing.Size(28, 29);
+            this.tsbNextSeason.Click += new System.EventHandler(this.tsbNextSeason_Click);
+            // 
+            // tssSeason
+            // 
+            this.tssSeason.Name = "tssSeason";
+            this.tssSeason.Size = new System.Drawing.Size(6, 32);
+            // 
+            // tsbStartSeason
+            // 
+            this.tsbStartSeason.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tsbStartSeason.Image = global::VideoLibrary.Properties.Resources.IconPlay;
+            this.tsbStartSeason.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbStartSeason.Name = "tsbStartSeason";
+            this.tsbStartSeason.Size = new System.Drawing.Size(28, 29);
+            this.tsbStartSeason.Click += new System.EventHandler(this.tsbStartSeason_Click);
+            // 
             // ucRecordView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
@@ -292,9 +321,9 @@
             this.scMain.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.scMain)).EndInit();
             this.scMain.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.pbImage)).EndInit();
             this.tsVideoInfo.ResumeLayout(false);
             this.tsVideoInfo.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pbImage)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -321,5 +350,8 @@
         private System.Windows.Forms.ToolStripButton tsbPlay;
         private System.Windows.Forms.ToolStripButton tsbEdit;
         private System.Windows.Forms.ToolStripButton tsbRemove;
+        private System.Windows.Forms.ToolStripButton tsbNextSeason;
+        private System.Windows.Forms.ToolStripSeparator tssSeason;
+        private System.Windows.Forms.ToolStripButton tsbStartSeason;
     }
 }

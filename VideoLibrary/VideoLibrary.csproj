@@ -55,6 +55,18 @@
   <ItemGroup>
     <Compile Include="Classes\FileHelper.cs" />
     <Compile Include="Classes\Language.cs" />
+    <Compile Include="Forms\FormString.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FormString.Designer.cs">
+      <DependentUpon>FormString.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FormDates.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FormDates.Designer.cs">
+      <DependentUpon>FormDates.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\FormCaptcha.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -110,10 +122,10 @@
     </Compile>
     <Compile Include="Classes\XmlSerializeHelper.cs" />
     <Compile Include="Classes\VideoTag.cs" />
-    <Compile Include="ucRecordEdit.cs">
+    <Compile Include="Forms\ucRecordEdit.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="ucRecordEdit.Designer.cs">
+    <Compile Include="Forms\ucRecordEdit.Designer.cs">
       <DependentUpon>ucRecordEdit.cs</DependentUpon>
     </Compile>
     <EmbeddedResource Include="Forms\FormAdd.resx">
@@ -122,11 +134,17 @@
     <EmbeddedResource Include="Forms\FormCaptcha.resx">
       <DependentUpon>FormCaptcha.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FormDates.resx">
+      <DependentUpon>FormDates.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\FormPic.resx">
       <DependentUpon>FormPic.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FormLanguages.resx">
       <DependentUpon>FormLanguages.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FormString.resx">
+      <DependentUpon>FormString.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
@@ -151,7 +169,7 @@
     <EmbeddedResource Include="Forms\ucRecordView.resx">
       <DependentUpon>ucRecordView.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ucRecordEdit.resx">
+    <EmbeddedResource Include="Forms\ucRecordEdit.resx">
       <DependentUpon>ucRecordEdit.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="packages.config" />
@@ -179,6 +197,11 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Cinema.ico" />
+    <None Include="Resources\IconApply.png" />
+    <None Include="Resources\IconUpload.png" />
+    <None Include="Resources\action-delete-sharp-thick.png" />
+    <None Include="Resources\IconDownload.png" />
+    <None Include="Resources\IconClear.png" />
     <None Include="Resources\IconSave.png" />
     <None Include="Resources\IconHDR.png" />
     <None Include="Resources\IconUHD.png" />

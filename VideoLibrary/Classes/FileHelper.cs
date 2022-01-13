@@ -190,7 +190,7 @@ namespace VideoLibrary
         {
             string picsDirectory = GetPicsDirectory();
             if (!string.IsNullOrEmpty(picsDirectory))
-                return Path.Combine(picsDirectory, "" + id + ".jpg");
+                return Path.Combine(picsDirectory, id + ".jpg");
             else
                 return null;
         }
