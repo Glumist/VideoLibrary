@@ -61,20 +61,11 @@ namespace VideoLibrary
             Extension = extension;
         }
 
-        public override string ToString()
-        {
-            return Text;
-        }
+        public override string ToString() => Text;
 
-        public static int CompareById(Language a, Language b)
-        {
-            return a.Id - b.Id;
-        }
+        public static int CompareById(Language a, Language b) => a.Id - b.Id;
 
-        public static int CompareByText(Language a, Language b)
-        {
-            return string.Compare(a.Text, b.Text);
-        }
+        public static int CompareByText(Language a, Language b) => string.Compare(a.Text, b.Text);
 
         public static Image GetLanguagesPic(List<Language> languages)
         {
@@ -164,9 +155,9 @@ namespace VideoLibrary
             Languages.Sort(Language.CompareById);
         }
 
-        public static void Refresh()
-        {
-            _languageCollection = Load();
-        }
+        public static void Refresh() 
+        { 
+            _languageCollection = Load(); 
+        }       
     }
 }

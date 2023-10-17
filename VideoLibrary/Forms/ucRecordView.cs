@@ -27,6 +27,7 @@ namespace VideoLibrary
             _record = record;
 
             tbName.Text = record.Name;
+            tbOrigName.Text = record.OrigName;
             tbSynopsis.Text = record.Synopsis;
             tbComment.Text = record.Comment;
 
@@ -48,15 +49,7 @@ namespace VideoLibrary
             }
 
             tsddbUserScore.Text = record.UserScore.ToString();
-            switch (record.UserScore)
-            {
-                case 0: tsddbUserScore.ForeColor = tsmiUserScore0.ForeColor; break;
-                case 1: tsddbUserScore.ForeColor = tsmiUserScore1.ForeColor; break;
-                case 2: tsddbUserScore.ForeColor = tsmiUserScore2.ForeColor; break;
-                case 3: tsddbUserScore.ForeColor = tsmiUserScore3.ForeColor; break;
-                case 4: tsddbUserScore.ForeColor = tsmiUserScore4.ForeColor; break;
-                case 5: tsddbUserScore.ForeColor = tsmiUserScore5.ForeColor; break;
-            }
+            tsddbUserScore.ForeColor = VideoRecord.GetColorByUserScore(record.UserScore);
 
             tsbPlay.Enabled = record.CanPlay;
             tsbBrowse.Enabled = record.CanBrowse;
@@ -105,7 +98,9 @@ namespace VideoLibrary
 
         private void btUserScore_Click(object sender, EventArgs e)
         {
-            if (sender == tsmiUserScore0)
+            if (sender is ToolStripMenuItem)
+                _record.UserScore = int.Parse((sender as ToolStripMenuItem).Text);
+            /*if (sender == tsmiUserScore0)
                 _record.UserScore = 0;
             else if (sender == tsmiUserScore1)
                 _record.UserScore = 1;
@@ -116,7 +111,7 @@ namespace VideoLibrary
             else if (sender == tsmiUserScore4)
                 _record.UserScore = 4;
             else if (sender == tsmiUserScore5)
-                _record.UserScore = 5;
+                _record.UserScore = 5;*/
 
             OnVideoRecordSaved(_record);
         }
@@ -157,14 +152,21 @@ namespace VideoLibrary
             _record.Existence = form.Existence;
             _record.DateStart = form.DateStart;
             _record.DateEnd = form.DateEnd;
-            if (!_record.SeasonDates.Exists(s => s.Season == _record.Season))
+
+            SeasonDates dates = _record.SeasonDates.Find(s => s.Season == _record.Season);
+            if (dates == null)
                 VideoRecord.AddSeasonDates(_record.SeasonDates, new SeasonDates()
                 {
                     Season = _record.Season,
                     DateStart = form.DateStart,
                     DateEnd = form.DateEnd
                 });
-            _record.Season++;
+            else
+            {
+                dates.DateStart = form.DateStart;
+                dates.DateEnd = form.DateEnd;
+            }
+            //_record.Season++;
 
             OnVideoRecordSaved(_record);
         }
@@ -189,6 +191,11 @@ namespace VideoLibrary
             if (url == "")
                 url = "http://www.kinopoisk.ru/film/" + _record.Id;
             Process.Start(url);
+        }
+
+        private void tsbCopyName_Click(object sender, EventArgs e)
+        {
+            Clipboard.SetText(_record.ToString(true));
         }
 
         public event EventHandler<VideoRecord> VideoRecordSaved;

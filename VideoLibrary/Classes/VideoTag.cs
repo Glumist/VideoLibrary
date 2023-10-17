@@ -2,9 +2,6 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Serialization;
 
 namespace VideoLibrary
@@ -61,20 +58,11 @@ namespace VideoLibrary
             Extension = extension;
         }
 
-        public override string ToString()
-        {
-            return Text;
-        }
+        public override string ToString() => Text;
 
-        public static int CompareById(VideoTag a, VideoTag b)
-        {
-            return a.Id - b.Id;
-        }
+        public static int CompareById(VideoTag a, VideoTag b) => a.Id - b.Id;
 
-        public static int CompareByText(VideoTag a, VideoTag b)
-        {
-            return string.Compare(a.Text, b.Text);
-        }
+        public static int CompareByText(VideoTag a, VideoTag b) => string.Compare(a.Text, b.Text);
 
         public static Image GetTagsPic(List<VideoTag> tags)
         {
@@ -165,8 +153,8 @@ namespace VideoLibrary
         }
 
         public static void Refresh()
-        {
-            _videoTagCollection = Load();
+        { 
+            _videoTagCollection = Load(); 
         }
     }
 }

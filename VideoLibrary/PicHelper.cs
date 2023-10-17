@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Drawing.Text;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,7 +22,7 @@ namespace VideoLibrary
             return pic;
         }
 
-        public static Image MakeComplexRecordImage(Image origImage, VideoRecord record, int infoWidth = 55)
+        public static Image MakeComplexRecordImage(Image origImage, VideoRecord record, int infoWidth = 60)
         {
             if (record == null)
                 return origImage;
@@ -37,7 +39,13 @@ namespace VideoLibrary
                 TextRenderer.DrawText(g, record.DurationStr, font, new Point(origImage.Width + 5, lineHeight), Color.Black);
                 TextRenderer.DrawText(g, "" + record.Score, font, new Point(origImage.Width + 5, lineHeight * 2), Color.Black);
                 TextRenderer.DrawText(g, "" + record.Size, font, new Point(origImage.Width + 5, lineHeight * 3), Color.Black);
-                TextRenderer.DrawText(g, "" + record.UserScore, font, new Point(origImage.Width + 5, lineHeight * 4), Color.Black);
+
+                g.CompositingQuality = CompositingQuality.HighQuality;
+                g.TextRenderingHint = TextRenderingHint.AntiAliasGridFit;
+                g.DrawString((record.UserScore > 0 ? "" + record.UserScore : "?"), font, 
+                    new SolidBrush(VideoRecord.GetColorByUserScore(record.UserScore)), origImage.Width + 5, lineHeight * 4);
+                //TextRenderer.DrawText(g, (record.UserScore > 0 ? "" + record.UserScore : "?"), 
+                    //font, new Point(origImage.Width + 5, lineHeight * 4), VideoRecord.GetColorByUserScore(record.UserScore), Color.Transparent);
 
                 Image tagsPic = record.TagsPic;
                 g.DrawImage(tagsPic, origImage.Width + 5, lineHeight * 5, tagsPic.Width, tagsPic.Height);

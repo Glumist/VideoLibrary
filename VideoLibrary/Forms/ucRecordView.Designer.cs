@@ -34,6 +34,8 @@
             this.tbSynopsis = new System.Windows.Forms.TextBox();
             this.tbComment = new System.Windows.Forms.TextBox();
             this.tsVideoInfo = new System.Windows.Forms.ToolStrip();
+            this.tssSeason = new System.Windows.Forms.ToolStripSeparator();
+            this.tbOrigName = new System.Windows.Forms.TextBox();
             this.pbImage = new System.Windows.Forms.PictureBox();
             this.tsbEdit = new System.Windows.Forms.ToolStripButton();
             this.tsddbTags = new System.Windows.Forms.ToolStripDropDownButton();
@@ -48,9 +50,10 @@
             this.tsbBrowse = new System.Windows.Forms.ToolStripButton();
             this.tsbPlay = new System.Windows.Forms.ToolStripButton();
             this.tsbRemove = new System.Windows.Forms.ToolStripButton();
-            this.tsbNextSeason = new System.Windows.Forms.ToolStripButton();
-            this.tssSeason = new System.Windows.Forms.ToolStripSeparator();
             this.tsbStartSeason = new System.Windows.Forms.ToolStripButton();
+            this.tsbNextSeason = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.tsbCopyName = new System.Windows.Forms.ToolStripButton();
             ((System.ComponentModel.ISupportInitialize)(this.scMain)).BeginInit();
             this.scMain.Panel1.SuspendLayout();
             this.scMain.Panel2.SuspendLayout();
@@ -65,7 +68,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tbName.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.tbName.Font = new System.Drawing.Font("Microsoft Sans Serif", 15F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.tbName.Location = new System.Drawing.Point(4, 39);
+            this.tbName.Location = new System.Drawing.Point(4, 38);
             this.tbName.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.tbName.Name = "tbName";
             this.tbName.ReadOnly = true;
@@ -79,7 +82,7 @@
             this.scMain.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.scMain.Location = new System.Drawing.Point(4, 114);
+            this.scMain.Location = new System.Drawing.Point(4, 152);
             this.scMain.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.scMain.Name = "scMain";
             this.scMain.Orientation = System.Windows.Forms.Orientation.Horizontal;
@@ -91,8 +94,8 @@
             // scMain.Panel2
             // 
             this.scMain.Panel2.Controls.Add(this.tbSynopsis);
-            this.scMain.Size = new System.Drawing.Size(1408, 1107);
-            this.scMain.SplitterDistance = 370;
+            this.scMain.Size = new System.Drawing.Size(1408, 1069);
+            this.scMain.SplitterDistance = 357;
             this.scMain.SplitterWidth = 6;
             this.scMain.TabIndex = 22;
             // 
@@ -107,7 +110,7 @@
             this.tbSynopsis.Multiline = true;
             this.tbSynopsis.Name = "tbSynopsis";
             this.tbSynopsis.ReadOnly = true;
-            this.tbSynopsis.Size = new System.Drawing.Size(1408, 731);
+            this.tbSynopsis.Size = new System.Drawing.Size(1408, 706);
             this.tbSynopsis.TabIndex = 16;
             this.tbSynopsis.TabStop = false;
             // 
@@ -117,7 +120,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tbComment.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.tbComment.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.tbComment.Location = new System.Drawing.Point(4, 85);
+            this.tbComment.Location = new System.Drawing.Point(4, 123);
             this.tbComment.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.tbComment.Name = "tbComment";
             this.tbComment.ReadOnly = true;
@@ -139,7 +142,9 @@
             this.tsbRemove,
             this.tssSeason,
             this.tsbStartSeason,
-            this.tsbNextSeason});
+            this.tsbNextSeason,
+            this.toolStripSeparator1,
+            this.tsbCopyName});
             this.tsVideoInfo.Location = new System.Drawing.Point(0, 0);
             this.tsVideoInfo.Name = "tsVideoInfo";
             this.tsVideoInfo.Padding = new System.Windows.Forms.Padding(0, 0, 2, 0);
@@ -147,13 +152,33 @@
             this.tsVideoInfo.TabIndex = 24;
             this.tsVideoInfo.Text = "toolStrip1";
             // 
+            // tssSeason
+            // 
+            this.tssSeason.Name = "tssSeason";
+            this.tssSeason.Size = new System.Drawing.Size(6, 32);
+            // 
+            // tbOrigName
+            // 
+            this.tbOrigName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tbOrigName.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.tbOrigName.Font = new System.Drawing.Font("Microsoft Sans Serif", 15F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.tbOrigName.Location = new System.Drawing.Point(4, 77);
+            this.tbOrigName.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.tbOrigName.Name = "tbOrigName";
+            this.tbOrigName.ReadOnly = true;
+            this.tbOrigName.Size = new System.Drawing.Size(1408, 34);
+            this.tbOrigName.TabIndex = 25;
+            this.tbOrigName.TabStop = false;
+            this.tbOrigName.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
             // pbImage
             // 
             this.pbImage.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pbImage.Location = new System.Drawing.Point(0, 0);
             this.pbImage.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.pbImage.Name = "pbImage";
-            this.pbImage.Size = new System.Drawing.Size(1408, 370);
+            this.pbImage.Size = new System.Drawing.Size(1408, 357);
             this.pbImage.TabIndex = 1;
             this.pbImage.TabStop = false;
             this.pbImage.Click += new System.EventHandler(this.pbImage_Click);
@@ -201,7 +226,7 @@
             // 
             // tsmiUserScore1
             // 
-            this.tsmiUserScore1.ForeColor = System.Drawing.Color.Red;
+            this.tsmiUserScore1.ForeColor = VideoRecord.GetColorByUserScore(1);
             this.tsmiUserScore1.Name = "tsmiUserScore1";
             this.tsmiUserScore1.Size = new System.Drawing.Size(106, 30);
             this.tsmiUserScore1.Text = "1";
@@ -209,7 +234,7 @@
             // 
             // tsmiUserScore2
             // 
-            this.tsmiUserScore2.ForeColor = System.Drawing.Color.DarkOrange;
+            this.tsmiUserScore2.ForeColor = VideoRecord.GetColorByUserScore(2);
             this.tsmiUserScore2.Name = "tsmiUserScore2";
             this.tsmiUserScore2.Size = new System.Drawing.Size(106, 30);
             this.tsmiUserScore2.Text = "2";
@@ -217,7 +242,7 @@
             // 
             // tsmiUserScore3
             // 
-            this.tsmiUserScore3.ForeColor = System.Drawing.Color.DeepSkyBlue;
+            this.tsmiUserScore3.ForeColor = VideoRecord.GetColorByUserScore(3);
             this.tsmiUserScore3.Name = "tsmiUserScore3";
             this.tsmiUserScore3.Size = new System.Drawing.Size(106, 30);
             this.tsmiUserScore3.Text = "3";
@@ -225,7 +250,7 @@
             // 
             // tsmiUserScore4
             // 
-            this.tsmiUserScore4.ForeColor = System.Drawing.Color.GreenYellow;
+            this.tsmiUserScore4.ForeColor = VideoRecord.GetColorByUserScore(4);
             this.tsmiUserScore4.Name = "tsmiUserScore4";
             this.tsmiUserScore4.Size = new System.Drawing.Size(106, 30);
             this.tsmiUserScore4.Text = "4";
@@ -233,7 +258,7 @@
             // 
             // tsmiUserScore5
             // 
-            this.tsmiUserScore5.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
+            this.tsmiUserScore5.ForeColor = VideoRecord.GetColorByUserScore(5);
             this.tsmiUserScore5.Name = "tsmiUserScore5";
             this.tsmiUserScore5.Size = new System.Drawing.Size(106, 30);
             this.tsmiUserScore5.Text = "5";
@@ -281,20 +306,6 @@
             this.tsbRemove.Size = new System.Drawing.Size(28, 29);
             this.tsbRemove.Click += new System.EventHandler(this.tsbRemove_Click);
             // 
-            // tsbNextSeason
-            // 
-            this.tsbNextSeason.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tsbNextSeason.Image = global::VideoLibrary.Properties.Resources.IconUpload;
-            this.tsbNextSeason.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbNextSeason.Name = "tsbNextSeason";
-            this.tsbNextSeason.Size = new System.Drawing.Size(28, 29);
-            this.tsbNextSeason.Click += new System.EventHandler(this.tsbNextSeason_Click);
-            // 
-            // tssSeason
-            // 
-            this.tssSeason.Name = "tssSeason";
-            this.tssSeason.Size = new System.Drawing.Size(6, 32);
-            // 
             // tsbStartSeason
             // 
             this.tsbStartSeason.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
@@ -304,12 +315,36 @@
             this.tsbStartSeason.Size = new System.Drawing.Size(28, 29);
             this.tsbStartSeason.Click += new System.EventHandler(this.tsbStartSeason_Click);
             // 
+            // tsbNextSeason
+            // 
+            this.tsbNextSeason.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tsbNextSeason.Image = global::VideoLibrary.Properties.Resources.IconUpload;
+            this.tsbNextSeason.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbNextSeason.Name = "tsbNextSeason";
+            this.tsbNextSeason.Size = new System.Drawing.Size(28, 29);
+            this.tsbNextSeason.Click += new System.EventHandler(this.tsbNextSeason_Click);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 32);
+            // 
+            // tsbCopyName
+            // 
+            this.tsbCopyName.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tsbCopyName.Image = global::VideoLibrary.Properties.Resources.IconCard;
+            this.tsbCopyName.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbCopyName.Name = "tsbCopyName";
+            this.tsbCopyName.Size = new System.Drawing.Size(28, 29);
+            this.tsbCopyName.Click += new System.EventHandler(this.tsbCopyName_Click);
+            // 
             // ucRecordView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.Controls.Add(this.tbComment);
+            this.Controls.Add(this.tbOrigName);
             this.Controls.Add(this.scMain);
             this.Controls.Add(this.tbName);
             this.Controls.Add(this.tsVideoInfo);
@@ -353,5 +388,8 @@
         private System.Windows.Forms.ToolStripButton tsbNextSeason;
         private System.Windows.Forms.ToolStripSeparator tssSeason;
         private System.Windows.Forms.ToolStripButton tsbStartSeason;
+        private System.Windows.Forms.TextBox tbOrigName;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolStripButton tsbCopyName;
     }
 }

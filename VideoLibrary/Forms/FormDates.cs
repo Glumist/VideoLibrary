@@ -29,7 +29,7 @@ namespace VideoLibrary
             {
                 rbHave.Visible = false;
                 rbWillHave.Visible = false;
-                Height = 235;
+                Height = 150;
             }
         }
 

@@ -1,14 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics;
-using System.Drawing;
-using System.Data;
 using System.IO;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using VideoLibrary.Properties;
 
@@ -45,6 +39,7 @@ namespace VideoLibrary
             tbComment.Text = record.Comment;
             tbPath.Text = record.Path;
             tbName.Text = record.Name;
+            tbOrigName.Text = record.OrigName;
             tbYear.Text = record.Year;
             nudDuration.Value = record.Duration;
             nudScore.Value = (decimal)record.Score;
@@ -55,6 +50,7 @@ namespace VideoLibrary
             dtpDateEnd.Value = record.DateEnd.HasValue ? record.DateEnd.Value : DateTime.Today;
             dtpDateEnd.Checked = record.DateEnd.HasValue;
             nudSeason.Value = record.Season;
+            nudEpisodesCount.Value = record.EpisodesCount;
 
             _seasonDates = new List<SeasonDates>();
             record.SeasonDates.ForEach(s => _seasonDates.Add(new SeasonDates() { Season = s.Season, DateStart = s.DateStart, DateEnd = s.DateEnd }));
@@ -149,6 +145,7 @@ namespace VideoLibrary
             }
             EditedRecord.Id = (int)nudId.Value;
             EditedRecord.Name = tbName.Text;
+            EditedRecord.OrigName = tbOrigName.Text;
             EditedRecord.Year = tbYear.Text;
             EditedRecord.Duration = (int)nudDuration.Value;
             EditedRecord.Score = (double)nudScore.Value;
@@ -162,6 +159,7 @@ namespace VideoLibrary
             EditedRecord.DateStart = dtpDateStart.Checked ? (DateTime?)dtpDateStart.Value.Date : null;
             EditedRecord.DateEnd = dtpDateEnd.Checked ? (DateTime?)dtpDateEnd.Value.Date : null;
             EditedRecord.Season = (int)nudSeason.Value;
+            EditedRecord.EpisodesCount = (int)nudEpisodesCount.Value;
 
             if (rbSd.Checked)
                 EditedRecord.Resolution = Resolution.SD;
@@ -200,10 +198,6 @@ namespace VideoLibrary
             if (id <= 0)
                 return;
 
-            if (EditedRecord == null && VideoDataCollection.GetInstance().VideoList.Exists(v => v.Id == id))
-                if (MessageBox.Show("Запись с указанным Id уже существует. Продолжить?", "Дубликат", MessageBoxButtons.YesNo) != DialogResult.Yes)
-                    return;
-
             try
             {
                 HtmlHelper.SaveVideoPicture(id);
@@ -220,6 +214,13 @@ namespace VideoLibrary
             int id = (int)nudId.Value;
             if (id <= 0)
                 return;
+
+            if (Clipboard.ContainsImage())
+            {
+                FileHelper.SaveImage(Clipboard.GetImage(), id);
+                btGetFromInternetByAddress.Image = Resources.IconApply;
+                return;
+            }
 
             FormString form = new FormString("Введите URL картинки");
             if (form.ShowDialog() != DialogResult.OK)
@@ -262,6 +263,24 @@ namespace VideoLibrary
                 });
                 dgvSeasonDates.DataSource = new List<SeasonDates>(_seasonDates);
             }
+        }
+
+        private void dgvSeasonDates_CellContentDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex == -1)
+                return;
+
+            SeasonDates dates = dgvSeasonDates.Rows[e.RowIndex].DataBoundItem as SeasonDates;
+            if (dates == null)
+                return;
+
+            if (dates.DateStart.HasValue)
+                dtpDateStart.Value = dates.DateStart.Value;
+            dtpDateStart.Checked = dates.DateStart.HasValue;
+            if (dates.DateEnd.HasValue)
+                dtpDateEnd.Value = dates.DateEnd.Value;
+            dtpDateEnd.Checked = dates.DateEnd.HasValue;
+            nudSeason.Value = dates.Season;
         }
 
         private void btBrowse_Click(object sender, EventArgs e)
@@ -333,6 +352,16 @@ namespace VideoLibrary
         {
             if (VideoRecordAdded != null)
                 VideoRecordAdded(this, record);
+        }
+
+        private void nudId_Leave(object sender, EventArgs e)
+        {
+            int id = (int)nudId.Value;
+            if (id <= 0)
+                return;
+
+            if (EditedRecord == null && VideoDataCollection.GetInstance().VideoList.Exists(v => v.Id == id))
+                MessageBox.Show("Запись с указанным Id уже существует");
         }
     }
 }

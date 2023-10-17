@@ -55,6 +55,8 @@ namespace VideoLibrary
         {
             Thread.Sleep(1000);
             RefreshImages((Existence)e.Argument);
+            if (bgwImagesLoader.CancellationPending)
+                e.Cancel = true;
             e.Result = e.Argument;
         }
 
@@ -211,19 +213,21 @@ namespace VideoLibrary
                     filtered.RemoveAll(v => !v.Tags.Exists(t => t.Id == tag.Id));
 
             if (tscbSort.SelectedIndex == 1)
-                filtered.Sort(VideoRecord.CompareByScore);
+                filtered.Sort(VideoRecord.CompareByOrigName);
             else if (tscbSort.SelectedIndex == 2)
-                filtered.Sort(VideoRecord.CompareByUserScore);
+                filtered.Sort(VideoRecord.CompareByScore);
             else if (tscbSort.SelectedIndex == 3)
-                filtered.Sort(VideoRecord.CompareByDuration);
+                filtered.Sort(VideoRecord.CompareByUserScore);
             else if (tscbSort.SelectedIndex == 4)
-                filtered.Sort(VideoRecord.CompareByYear);
+                filtered.Sort(VideoRecord.CompareByDuration);
             else if (tscbSort.SelectedIndex == 5)
-                filtered.Sort(VideoRecord.CompareBySize);
+                filtered.Sort(VideoRecord.CompareByYear);
             else if (tscbSort.SelectedIndex == 6)
-                filtered.Sort(VideoRecord.CompareByQuality);
+                filtered.Sort(VideoRecord.CompareBySize);
             else if (tscbSort.SelectedIndex == 7)
-                filtered.Sort(VideoRecord.CompareByDateEnd);
+                filtered.Sort(VideoRecord.CompareByQuality);
+            else if (tscbSort.SelectedIndex == 8)
+                filtered.Sort(VideoRecord.CompareByDateView);
 
             return filtered;
         }
@@ -293,14 +297,20 @@ namespace VideoLibrary
                         loadedPics.Remove(existence);
                     return;
                 }
-                Image image = FileHelper.GetImage(id, ilVideo.ImageSize.Height);
-                if (image == null)
+                try
                 {
-                    //ilVideo.Images.Add("" + id, VideoRecord.ClearImage);
-                    continue;
+                    if (ilVideo.Images.ContainsKey("" + id))
+                        continue;
+                    Image image = FileHelper.GetImage(id, ilVideo.ImageSize.Height);
+                    if (image == null)
+                    {
+                        //ilVideo.Images.Add("" + id, VideoRecord.ClearImage);
+                        continue;
+                    }
+                    Image complexImage = PicHelper.MakeComplexRecordImage(image, _videoCollection.VideoList.Find(v => v.Id == id));
+                    ilVideo.Images.Add("" + id, complexImage);
                 }
-                Image complexImage = PicHelper.MakeComplexRecordImage(image, _videoCollection.VideoList.Find(v => v.Id == id));
-                ilVideo.Images.Add("" + id, complexImage);
+                catch { }
             }
             //log += "refresh list view " + string.Format("{0:mm:ss.ffff}", DateTime.Now) + Environment.NewLine;
         }

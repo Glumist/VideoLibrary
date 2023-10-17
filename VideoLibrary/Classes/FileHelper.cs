@@ -15,6 +15,11 @@ namespace VideoLibrary
             return Path.GetDirectoryName(System.Windows.Forms.Application.ExecutablePath);
         }
 
+        public static void SaveImage(Image image, int id)
+        {
+            image.Save(GetFilename(id));
+        }
+
         public static Image GetImage(int id)
         {
             string filename = GetFilename(id);

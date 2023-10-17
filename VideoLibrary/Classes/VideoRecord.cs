@@ -2,9 +2,6 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Serialization;
 using VideoLibrary.Properties;
 
@@ -30,6 +27,13 @@ namespace VideoLibrary
             set { _name = value; }
         }
 
+        private string _origName = "";
+        public string OrigName
+        {
+            get { return _origName; }
+            set { _origName = value; }
+        }
+
         private string _year = "";
         public string Year
         {
@@ -44,10 +48,24 @@ namespace VideoLibrary
             set { _duration = value; }
         }
 
+        public int FullDuration
+        {
+            get 
+            {
+                if (Type == VideoType.Series || Type == VideoType.MiniSeries)
+                    return Duration * EpisodesCount;
+                else
+                    return Duration;
+            }
+        }
+
         public string DurationStr
         {
             get
             {
+                if (Type == VideoType.Series || Type == VideoType.MiniSeries)                
+                    return EpisodesCount + "x" + Duration;                
+
                 string minutes = "" + (Duration % 60);
                 if (minutes.Length == 1)
                     minutes = "0" + minutes;
@@ -151,6 +169,27 @@ namespace VideoLibrary
             set { _dateEnd = value; }
         }
 
+        public DateTime? Date
+        {
+            get
+            {
+                if (DateEnd.HasValue)
+                    return DateEnd;
+                else if (DateStart.HasValue)
+                    return DateStart;
+                else if (Type == VideoType.Series || Type == VideoType.MiniSeries)
+                {
+                    foreach (SeasonDates dates in SeasonDates)
+                        if (dates.DateEnd.HasValue)
+                            return dates.DateEnd;
+                        else if (dates.DateStart.HasValue)
+                            return dates.DateStart;
+                }
+
+                return null;
+            }
+        }
+
         #endregion
 
         #region Series
@@ -167,6 +206,13 @@ namespace VideoLibrary
         {
             get { return _seasonDates; }
             set { _seasonDates = value; }
+        }
+
+        private int _episodesCount = 1;
+        public int EpisodesCount
+        {
+            get { return _episodesCount; }
+            set { _episodesCount = value; }
         }
 
         #endregion
@@ -401,15 +447,33 @@ namespace VideoLibrary
             SeasonDates = new List<SeasonDates>();
         }
 
-        public override string ToString()
+        public override string ToString() => ToString(false);        
+
+        public string ToString(bool full)
         {
-            return Name;
+            int seasonNum = 1;
+            if (Type == VideoType.Series || Type == VideoType.MiniSeries)
+            {
+                seasonNum = Season;
+                if (Existence == Existence.WillHave)
+                    seasonNum++;
+            }
+
+            string name = Name;
+            if (seasonNum > 1)
+            {
+                if (full)
+                    name = seasonNum + " сезон " + name;
+                else
+                    name += " s" + seasonNum;
+            }
+            if (!string.IsNullOrWhiteSpace(OrigName) && OrigName != Name)
+                name += " (" + OrigName + ")";
+
+            return name;
         }
 
-        public void ResetSizeNum()
-        {
-            _sizeNum = -1;
-        }
+        public void ResetSizeNum() => _sizeNum = -1;        
 
         public static Image ClearImage { get { return new Bitmap(1, 1, System.Drawing.Imaging.PixelFormat.Format32bppArgb); } }
 
@@ -477,6 +541,19 @@ namespace VideoLibrary
             }
         }
 
+        public static Color GetColorByUserScore(int userscore)
+        {
+            switch (userscore)
+            {
+                case 1: return Color.Red;
+                case 2: return Color.DarkOrange;
+                case 3: return Color.DeepSkyBlue;
+                case 4: return Color.GreenYellow;
+                case 5: return Color.FromArgb(0, 192, 0);
+                default: return Color.Black;
+            }
+        }
+
         #endregion
 
         #region Compare
@@ -488,10 +565,9 @@ namespace VideoLibrary
             return (int)((b.Score - a.Score) * 100);
         }
 
-        public static int CompareByName(VideoRecord a, VideoRecord b)
-        {
-            return string.Compare(a.Name, b.Name);
-        }
+        public static int CompareByName(VideoRecord a, VideoRecord b) => string.Compare(a.Name, b.Name);        
+
+        public static int CompareByOrigName(VideoRecord a, VideoRecord b) => string.Compare(a.OrigName, b.OrigName);        
 
         public static int CompareByType(VideoRecord a, VideoRecord b)
         {
@@ -525,9 +601,9 @@ namespace VideoLibrary
 
         public static int CompareByDuration(VideoRecord a, VideoRecord b)
         {
-            if (a.Duration == b.Duration)
+            if (a.FullDuration == b.FullDuration)
                 return CompareByName(a, b);
-            return (int)((b.Duration - a.Duration) * 100);
+            return (int)((b.FullDuration - a.FullDuration) * 100);
         }
 
         public static int CompareByYear(VideoRecord a, VideoRecord b)
@@ -572,10 +648,7 @@ namespace VideoLibrary
             return CompareByName(a, b);
         }
 
-        private static int CompareByResolution(VideoRecord a, VideoRecord b)
-        {
-            return (int)b.Resolution - (int)a.Resolution;
-        }
+        private static int CompareByResolution(VideoRecord a, VideoRecord b) => (int)b.Resolution - (int)a.Resolution;        
 
         private static int CompareByHdr(VideoRecord a, VideoRecord b)
         {
@@ -587,15 +660,15 @@ namespace VideoLibrary
                 return 1;
         }
 
-        public static int CompareByDateEnd(VideoRecord a, VideoRecord b)
+        public static int CompareByDateView(VideoRecord a, VideoRecord b)
         {
-            if (a.DateEnd == b.DateEnd)
+            if (a.Date == b.Date)
                 return string.Compare(a.Name, b.Name);
-            else if (a.DateEnd.HasValue && !b.DateEnd.HasValue)
+            else if (a.Date.HasValue && !b.Date.HasValue)
                 return -1;
-            else if (!a.DateEnd.HasValue && b.DateEnd.HasValue)
+            else if (!a.Date.HasValue && b.Date.HasValue)
                 return 1;
-            return DateTime.Compare(b.DateEnd.Value, a.DateEnd.Value);
+            return DateTime.Compare(b.Date.Value, a.Date.Value);
         }
 
         #endregion
@@ -659,6 +732,18 @@ namespace VideoLibrary
             }
 
             result.VideoList.Sort(VideoRecord.CompareByType);
+
+            foreach (VideoRecord record in result.VideoList)
+                if (string.IsNullOrWhiteSpace(record.OrigName))
+                {
+                    int first = record.Name.IndexOf('(');
+                    int last = record.Name.IndexOf(')');
+                    if (first != -1 && last != -1 && first < last)
+                    {
+                        record.OrigName = record.Name.Substring(first + 1, last - first - 1);
+                        record.Name = record.Name.Substring(0, first - 1);
+                    }
+                }
 
             return result;
         }

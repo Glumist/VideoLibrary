@@ -303,6 +303,7 @@
             this.tscbSort.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.tscbSort.Items.AddRange(new object[] {
             "По названию",
+            "По ориг. названию",
             "По рейтингу",
             "По приоритету",
             "По хронометражу",
